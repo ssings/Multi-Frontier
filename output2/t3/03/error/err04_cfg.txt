@@ -1,0 +1,16 @@
+time=2026-08-04T23:12:59+08:00
+stage=cfg
+model=deepseek-v4-pro
+error_index=4
+
+===== DETAILS =====
+TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
+Running breadth-first search Model-Checking with fp 22 and seed 5311190462348587901 with 1 worker on 8 cores with 1820MB heap and 64MB offheap memory (Windows 10 10.0 amd64, Oracle Corporation 1.8.0_131 x86_64, MSBDiskFPSet, DiskStateQueue).
+Error: TLC threw an unexpected exception.
+This was probably caused by an error in the spec or model.
+See the User Output or TLC Console for clues to what happened.
+The exception was a tlc2.tool.ConfigFileException
+: TLC found an error in the configuration file at line 9
+It was expecting ], but did not find it.
+Finished in 00s at (2026-08-04 23:12:59)
+

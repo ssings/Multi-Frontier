@@ -1,0 +1,312 @@
+time=2026-08-04T20:05:42+08:00
+stage=sany
+model=deepseek-v4-pro
+error_index=6
+
+===== DETAILS =====
+===== COMMAND =====
+java -Xmx2g -cp D:\python\formalization\docs\tla2tools.jar tla2sany.SANY QCore.tla
+===== MODULE: QCore.tla; RETURN CODE: 0 =====
+
+****** SANY2 Version 2.1 created 24 February 2014
+
+Parsing file D:\python\formalization\output1\t2\03\Qdrant\QCore.tla
+Parsing file C:\Users\27\AppData\Local\Temp\Naturals.tla
+Parsing file C:\Users\27\AppData\Local\Temp\FiniteSets.tla
+Parsing file C:\Users\27\AppData\Local\Temp\Sequences.tla
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module QCore
+
+
+===== COMMAND =====
+java -Xmx2g -cp D:\python\formalization\docs\tla2tools.jar tla2sany.SANY QAuth.tla
+===== MODULE: QAuth.tla; RETURN CODE: 0 =====
+
+****** SANY2 Version 2.1 created 24 February 2014
+
+Parsing file D:\python\formalization\output1\t2\03\Qdrant\QAuth.tla
+Parsing file D:\python\formalization\output1\t2\03\Qdrant\QCore.tla
+Parsing file C:\Users\27\AppData\Local\Temp\Naturals.tla
+Parsing file C:\Users\27\AppData\Local\Temp\FiniteSets.tla
+Parsing file C:\Users\27\AppData\Local\Temp\Sequences.tla
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module QCore
+Semantic processing of module QAuth
+
+
+===== COMMAND =====
+java -Xmx2g -cp D:\python\formalization\docs\tla2tools.jar tla2sany.SANY QWrite.tla
+===== MODULE: QWrite.tla; RETURN CODE: 0 =====
+
+****** SANY2 Version 2.1 created 24 February 2014
+
+Parsing file D:\python\formalization\output1\t2\03\Qdrant\QWrite.tla
+Parsing file D:\python\formalization\output1\t2\03\Qdrant\QAuth.tla
+Parsing file D:\python\formalization\output1\t2\03\Qdrant\QCore.tla
+Parsing file C:\Users\27\AppData\Local\Temp\Naturals.tla
+Parsing file C:\Users\27\AppData\Local\Temp\FiniteSets.tla
+Parsing file C:\Users\27\AppData\Local\Temp\Sequences.tla
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module QCore
+Semantic processing of module QAuth
+Semantic processing of module QWrite
+
+
+===== COMMAND =====
+java -Xmx2g -cp D:\python\formalization\docs\tla2tools.jar tla2sany.SANY QReplica.tla
+===== MODULE: QReplica.tla; RETURN CODE: 0 =====
+
+****** SANY2 Version 2.1 created 24 February 2014
+
+Parsing file D:\python\formalization\output1\t2\03\Qdrant\QReplica.tla
+Parsing file D:\python\formalization\output1\t2\03\Qdrant\QWrite.tla
+Parsing file D:\python\formalization\output1\t2\03\Qdrant\QAuth.tla
+Parsing file D:\python\formalization\output1\t2\03\Qdrant\QCore.tla
+Parsing file C:\Users\27\AppData\Local\Temp\Naturals.tla
+Parsing file C:\Users\27\AppData\Local\Temp\FiniteSets.tla
+Parsing file C:\Users\27\AppData\Local\Temp\Sequences.tla
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module QCore
+Semantic processing of module QAuth
+Semantic processing of module QWrite
+Semantic processing of module QReplica
+
+
+===== COMMAND =====
+java -Xmx2g -cp D:\python\formalization\docs\tla2tools.jar tla2sany.SANY QMigrate.tla
+===== MODULE: QMigrate.tla; RETURN CODE: 0 =====
+
+****** SANY2 Version 2.1 created 24 February 2014
+
+Parsing file D:\python\formalization\output1\t2\03\Qdrant\QMigrate.tla
+Parsing file D:\python\formalization\output1\t2\03\Qdrant\QReplica.tla
+Parsing file D:\python\formalization\output1\t2\03\Qdrant\QWrite.tla
+Parsing file D:\python\formalization\output1\t2\03\Qdrant\QAuth.tla
+Parsing file D:\python\formalization\output1\t2\03\Qdrant\QCore.tla
+Parsing file C:\Users\27\AppData\Local\Temp\Naturals.tla
+Parsing file C:\Users\27\AppData\Local\Temp\FiniteSets.tla
+Parsing file C:\Users\27\AppData\Local\Temp\Sequences.tla
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module QCore
+Semantic processing of module QAuth
+Semantic processing of module QWrite
+Semantic processing of module QReplica
+Semantic processing of module QMigrate
+
+
+===== COMMAND =====
+java -Xmx2g -cp D:\python\formalization\docs\tla2tools.jar tla2sany.SANY QSearch.tla
+===== MODULE: QSearch.tla; RETURN CODE: 0 =====
+
+****** SANY2 Version 2.1 created 24 February 2014
+
+Parsing file D:\python\formalization\output1\t2\03\Qdrant\QSearch.tla
+Parsing file D:\python\formalization\output1\t2\03\Qdrant\QMigrate.tla
+Parsing file D:\python\formalization\output1\t2\03\Qdrant\QReplica.tla
+Parsing file D:\python\formalization\output1\t2\03\Qdrant\QWrite.tla
+Parsing file D:\python\formalization\output1\t2\03\Qdrant\QAuth.tla
+Parsing file D:\python\formalization\output1\t2\03\Qdrant\QCore.tla
+Parsing file C:\Users\27\AppData\Local\Temp\Naturals.tla
+Parsing file C:\Users\27\AppData\Local\Temp\FiniteSets.tla
+Parsing file C:\Users\27\AppData\Local\Temp\Sequences.tla
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module QCore
+Semantic processing of module QAuth
+Semantic processing of module QWrite
+Semantic processing of module QReplica
+Semantic processing of module QMigrate
+Semantic processing of module QSearch
+
+
+===== COMMAND =====
+java -Xmx2g -cp D:\python\formalization\docs\tla2tools.jar tla2sany.SANY QFrontierInterface.tla
+===== MODULE: QFrontierInterface.tla; RETURN CODE: 0 =====
+
+****** SANY2 Version 2.1 created 24 February 2014
+
+Parsing file D:\python\formalization\output1\t2\03\Qdrant\QFrontierInterface.tla
+Parsing file D:\python\formalization\output1\t2\03\Qdrant\QSearch.tla
+Parsing file D:\python\formalization\output1\t2\03\Qdrant\QMigrate.tla
+Parsing file D:\python\formalization\output1\t2\03\Qdrant\QReplica.tla
+Parsing file D:\python\formalization\output1\t2\03\Qdrant\QWrite.tla
+Parsing file D:\python\formalization\output1\t2\03\Qdrant\QAuth.tla
+Parsing file D:\python\formalization\output1\t2\03\Qdrant\QCore.tla
+Parsing file C:\Users\27\AppData\Local\Temp\Naturals.tla
+Parsing file C:\Users\27\AppData\Local\Temp\FiniteSets.tla
+Parsing file C:\Users\27\AppData\Local\Temp\Sequences.tla
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module QCore
+Semantic processing of module QAuth
+Semantic processing of module QWrite
+Semantic processing of module QReplica
+Semantic processing of module QMigrate
+Semantic processing of module QSearch
+Semantic processing of module QFrontierInterface
+
+
+===== COMMAND =====
+java -Xmx2g -cp D:\python\formalization\docs\tla2tools.jar tla2sany.SANY QCfgHelpers.tla
+===== MODULE: QCfgHelpers.tla; RETURN CODE: 0 =====
+
+****** SANY2 Version 2.1 created 24 February 2014
+
+Parsing file D:\python\formalization\output1\t2\03\Qdrant\QCfgHelpers.tla
+Parsing file D:\python\formalization\output1\t2\03\Qdrant\QCore.tla
+Parsing file C:\Users\27\AppData\Local\Temp\Naturals.tla
+Parsing file C:\Users\27\AppData\Local\Temp\FiniteSets.tla
+Parsing file C:\Users\27\AppData\Local\Temp\Sequences.tla
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module QCore
+Semantic processing of module QCfgHelpers
+
+
+===== COMMAND =====
+java -Xmx2g -cp D:\python\formalization\docs\tla2tools.jar tla2sany.SANY QIntegrated.tla
+===== MODULE: QIntegrated.tla; RETURN CODE: 0 =====
+
+****** SANY2 Version 2.1 created 24 February 2014
+
+Parsing file D:\python\formalization\output1\t2\03\Qdrant\QIntegrated.tla
+Parsing file D:\python\formalization\output1\t2\03\Qdrant\QSearch.tla
+Parsing file D:\python\formalization\output1\t2\03\Qdrant\QMigrate.tla
+Parsing file D:\python\formalization\output1\t2\03\Qdrant\QReplica.tla
+Parsing file D:\python\formalization\output1\t2\03\Qdrant\QWrite.tla
+Parsing file D:\python\formalization\output1\t2\03\Qdrant\QAuth.tla
+Parsing file D:\python\formalization\output1\t2\03\Qdrant\QCore.tla
+Parsing file C:\Users\27\AppData\Local\Temp\Naturals.tla
+Parsing file C:\Users\27\AppData\Local\Temp\FiniteSets.tla
+Parsing file C:\Users\27\AppData\Local\Temp\Sequences.tla
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module QCore
+Semantic processing of module QAuth
+Semantic processing of module QWrite
+Semantic processing of module QReplica
+Semantic processing of module QMigrate
+Semantic processing of module QSearch
+Semantic processing of module QIntegrated
+Semantic errors:
+
+*** Warnings: 17
+
+line 5, col 5 to line 5, col 14 of module QIntegrated
+
+Multiple declarations or definitions for symbol permission.  
+This duplicates the one at line 4, col 10 to line 4, col 19 of module QAuth.
+
+
+line 6, col 5 to line 6, col 14 of module QIntegrated
+
+Multiple declarations or definitions for symbol writeState.  
+This duplicates the one at line 5, col 5 to line 5, col 14 of module QWrite.
+
+
+line 7, col 5 to line 7, col 7 of module QIntegrated
+
+Multiple declarations or definitions for symbol wal.  
+This duplicates the one at line 6, col 5 to line 6, col 7 of module QWrite.
+
+
+line 8, col 5 to line 8, col 11 of module QIntegrated
+
+Multiple declarations or definitions for symbol applied.  
+This duplicates the one at line 7, col 5 to line 7, col 11 of module QWrite.
+
+
+line 9, col 5 to line 9, col 10 of module QIntegrated
+
+Multiple declarations or definitions for symbol ackSet.  
+This duplicates the one at line 8, col 5 to line 8, col 10 of module QWrite.
+
+
+line 10, col 5 to line 10, col 14 of module QIntegrated
+
+Multiple declarations or definitions for symbol replicaHas.  
+This duplicates the one at line 9, col 5 to line 9, col 14 of module QWrite.
+
+
+line 11, col 5 to line 11, col 13 of module QIntegrated
+
+Multiple declarations or definitions for symbol shardData.  
+This duplicates the one at line 10, col 5 to line 10, col 13 of module QWrite.
+
+
+line 12, col 5 to line 12, col 13 of module QIntegrated
+
+Multiple declarations or definitions for symbol lastWrite.  
+This duplicates the one at line 11, col 5 to line 11, col 13 of module QWrite.
+
+
+line 13, col 5 to line 13, col 14 of module QIntegrated
+
+Multiple declarations or definitions for symbol shardOwner.  
+This duplicates the one at line 5, col 5 to line 5, col 14 of module QMigrate.
+
+
+line 14, col 5 to line 14, col 17 of module QIntegrated
+
+Multiple declarations or definitions for symbol shardLocation.  
+This duplicates the one at line 6, col 5 to line 6, col 17 of module QMigrate.
+
+
+line 15, col 5 to line 15, col 17 of module QIntegrated
+
+Multiple declarations or definitions for symbol migrateState.  
+This duplicates the one at line 7, col 5 to line 7, col 17 of module QMigrate.
+
+
+line 16, col 5 to line 16, col 15 of module QIntegrated
+
+Multiple declarations or definitions for symbol migrateSrc.  
+This duplicates the one at line 8, col 5 to line 8, col 15 of module QMigrate.
+
+
+line 17, col 5 to line 17, col 15 of module QIntegrated
+
+Multiple declarations or definitions for symbol migrateDst.  
+This duplicates the one at line 9, col 5 to line 9, col 15 of module QMigrate.
+
+
+line 18, col 5 to line 18, col 14 of module QIntegrated
+
+Multiple declarations or definitions for symbol copiedData.  
+This duplicates the one at line 10, col 5 to line 10, col 14 of module QMigrate.
+
+
+line 19, col 5 to line 19, col 16 of module QIntegrated
+
+Multiple declarations or definitions for symbol lastMigrate.  
+This duplicates the one at line 11, col 5 to line 11, col 16 of module QMigrate.
+
+
+line 20, col 5 to line 20, col 16 of module QIntegrated
+
+Multiple declarations or definitions for symbol searchResult.  
+This duplicates the one at line 5, col 5 to line 5, col 16 of module QSearch.
+
+
+line 21, col 5 to line 21, col 14 of module QIntegrated
+
+Multiple declarations or definitions for symbol lastSearch.  
+This duplicates the one at line 6, col 5 to line 6, col 14 of module QSearch.
+
+
+
+

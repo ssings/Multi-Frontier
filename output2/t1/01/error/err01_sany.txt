@@ -1,0 +1,250 @@
+time=2026-08-04T20:36:07+08:00
+stage=sany
+model=deepseek-v4-pro
+error_index=1
+
+===== DETAILS =====
+===== MODULE: CCore.tla; RETURN CODE: 0 =====
+
+****** SANY2 Version 2.1 created 24 February 2014
+
+Parsing file D:\python\formalization\output2\t1\01\Cassandra\CCore.tla
+Parsing file C:\Users\27\AppData\Local\Temp\Naturals.tla
+Semantic processing of module Naturals
+Semantic processing of module CCore
+
+===== MODULE: CAuth.tla; RETURN CODE: 0 =====
+
+****** SANY2 Version 2.1 created 24 February 2014
+
+Parsing file D:\python\formalization\output2\t1\01\Cassandra\CAuth.tla
+Parsing file D:\python\formalization\output2\t1\01\Cassandra\CCore.tla
+Parsing file C:\Users\27\AppData\Local\Temp\Naturals.tla
+Semantic processing of module Naturals
+Semantic processing of module CCore
+Semantic processing of module CAuth
+
+===== MODULE: CCfgHelpers.tla; RETURN CODE: 0 =====
+
+****** SANY2 Version 2.1 created 24 February 2014
+
+Parsing file D:\python\formalization\output2\t1\01\Cassandra\CCfgHelpers.tla
+Parsing file D:\python\formalization\output2\t1\01\Cassandra\CCore.tla
+Parsing file C:\Users\27\AppData\Local\Temp\Naturals.tla
+Semantic processing of module Naturals
+Semantic processing of module CCore
+Semantic processing of module CCfgHelpers
+
+===== MODULE: CWrite.tla; RETURN CODE: 0 =====
+
+****** SANY2 Version 2.1 created 24 February 2014
+
+Parsing file D:\python\formalization\output2\t1\01\Cassandra\CWrite.tla
+Parsing file D:\python\formalization\output2\t1\01\Cassandra\CAuth.tla
+Parsing file D:\python\formalization\output2\t1\01\Cassandra\CCore.tla
+Parsing file C:\Users\27\AppData\Local\Temp\Naturals.tla
+Semantic processing of module Naturals
+Semantic processing of module CCore
+Semantic processing of module CAuth
+Semantic processing of module CWrite
+
+===== MODULE: CReplica.tla; RETURN CODE: 0 =====
+
+****** SANY2 Version 2.1 created 24 February 2014
+
+Parsing file D:\python\formalization\output2\t1\01\Cassandra\CReplica.tla
+Parsing file D:\python\formalization\output2\t1\01\Cassandra\CWrite.tla
+Parsing file D:\python\formalization\output2\t1\01\Cassandra\CAuth.tla
+Parsing file D:\python\formalization\output2\t1\01\Cassandra\CCore.tla
+Parsing file C:\Users\27\AppData\Local\Temp\Naturals.tla
+Semantic processing of module Naturals
+Semantic processing of module CCore
+Semantic processing of module CAuth
+Semantic processing of module CWrite
+Semantic processing of module CReplica
+Semantic errors:
+
+*** Errors: 1
+
+line 15, col 5 to line 15, col 15 of module CReplica
+
+Unknown operator: `Cardinality'.
+
+
+
+
+===== MODULE: CMigrate.tla; RETURN CODE: 0 =====
+
+****** SANY2 Version 2.1 created 24 February 2014
+
+Parsing file D:\python\formalization\output2\t1\01\Cassandra\CMigrate.tla
+Parsing file D:\python\formalization\output2\t1\01\Cassandra\CReplica.tla
+Parsing file D:\python\formalization\output2\t1\01\Cassandra\CWrite.tla
+Parsing file D:\python\formalization\output2\t1\01\Cassandra\CAuth.tla
+Parsing file D:\python\formalization\output2\t1\01\Cassandra\CCore.tla
+Parsing file C:\Users\27\AppData\Local\Temp\Naturals.tla
+Semantic processing of module Naturals
+Semantic processing of module CCore
+Semantic processing of module CAuth
+Semantic processing of module CWrite
+Semantic processing of module CReplica
+Semantic errors:
+
+*** Errors: 1
+
+line 15, col 5 to line 15, col 15 of module CReplica
+
+Unknown operator: `Cardinality'.
+
+
+
+Semantic processing of module CMigrate
+Semantic errors:
+
+*** Errors: 1
+
+line 15, col 5 to line 15, col 15 of module CReplica
+
+Unknown operator: `Cardinality'.
+
+
+
+
+===== MODULE: CQuery.tla; RETURN CODE: 0 =====
+
+****** SANY2 Version 2.1 created 24 February 2014
+
+Parsing file D:\python\formalization\output2\t1\01\Cassandra\CQuery.tla
+Parsing file D:\python\formalization\output2\t1\01\Cassandra\CMigrate.tla
+Parsing file D:\python\formalization\output2\t1\01\Cassandra\CReplica.tla
+Parsing file D:\python\formalization\output2\t1\01\Cassandra\CWrite.tla
+Parsing file D:\python\formalization\output2\t1\01\Cassandra\CAuth.tla
+Parsing file D:\python\formalization\output2\t1\01\Cassandra\CCore.tla
+Parsing file C:\Users\27\AppData\Local\Temp\Naturals.tla
+Semantic processing of module Naturals
+Semantic processing of module CCore
+Semantic processing of module CAuth
+Semantic processing of module CWrite
+Semantic processing of module CReplica
+Semantic errors:
+
+*** Errors: 1
+
+line 15, col 5 to line 15, col 15 of module CReplica
+
+Unknown operator: `Cardinality'.
+
+
+
+Semantic processing of module CMigrate
+Semantic errors:
+
+*** Errors: 1
+
+line 15, col 5 to line 15, col 15 of module CReplica
+
+Unknown operator: `Cardinality'.
+
+
+
+Semantic processing of module CQuery
+Semantic errors:
+
+*** Errors: 1
+
+line 15, col 5 to line 15, col 15 of module CReplica
+
+Unknown operator: `Cardinality'.
+
+
+
+
+===== MODULE: CFrontierInterface.tla; RETURN CODE: 0 =====
+
+****** SANY2 Version 2.1 created 24 February 2014
+
+Parsing file D:\python\formalization\output2\t1\01\Cassandra\CFrontierInterface.tla
+Parsing file D:\python\formalization\output2\t1\01\Cassandra\CQuery.tla
+Parsing file D:\python\formalization\output2\t1\01\Cassandra\CMigrate.tla
+Parsing file D:\python\formalization\output2\t1\01\Cassandra\CReplica.tla
+Parsing file D:\python\formalization\output2\t1\01\Cassandra\CWrite.tla
+Parsing file D:\python\formalization\output2\t1\01\Cassandra\CAuth.tla
+Parsing file D:\python\formalization\output2\t1\01\Cassandra\CCore.tla
+Parsing file C:\Users\27\AppData\Local\Temp\Naturals.tla
+Semantic processing of module Naturals
+Semantic processing of module CCore
+Semantic processing of module CAuth
+Semantic processing of module CWrite
+Semantic processing of module CReplica
+Semantic errors:
+
+*** Errors: 1
+
+line 15, col 5 to line 15, col 15 of module CReplica
+
+Unknown operator: `Cardinality'.
+
+
+
+Semantic processing of module CMigrate
+Semantic errors:
+
+*** Errors: 1
+
+line 15, col 5 to line 15, col 15 of module CReplica
+
+Unknown operator: `Cardinality'.
+
+
+
+Semantic processing of module CQuery
+Semantic errors:
+
+*** Errors: 1
+
+line 15, col 5 to line 15, col 15 of module CReplica
+
+Unknown operator: `Cardinality'.
+
+
+
+Semantic processing of module CFrontierInterface
+Semantic errors:
+
+*** Errors: 1
+
+line 15, col 5 to line 15, col 15 of module CReplica
+
+Unknown operator: `Cardinality'.
+
+
+
+
+===== MODULE: CIntegrated.tla; RETURN CODE: 4294967295 =====
+
+****** SANY2 Version 2.1 created 24 February 2014
+
+Parsing file D:\python\formalization\output2\t1\01\Cassandra\CIntegrated.tla
+***Parse Error***
+
+  Precedence conflict between ops => in block line 129, col 32 to line 129, col 33 of module CIntegrated and =>.
+
+Residual stack trace follows:
+ExtendableExpr starting at line 129, column 58.
+ExtendableExpr starting at line 129, column 35.
+ExtendableExpr starting at line 129, column 25.
+ExtendableExpr starting at line 129, column 8.
+Expression starting at line 129, column 8.
+
+
+Fatal errors while parsing TLA+ spec in file CIntegrated.tla
+
+tla2sany.semantic.AbortException
+*** Abort messages: 1
+
+In module CIntegrated
+
+Could not parse module CIntegrated from file CIntegrated.tla
+
+
+

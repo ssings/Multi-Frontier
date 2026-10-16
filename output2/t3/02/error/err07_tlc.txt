@@ -1,0 +1,104 @@
+time=2026-08-04T22:47:27+08:00
+stage=tlc
+model=deepseek-v4-pro
+error_index=7
+
+===== DETAILS =====
+TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
+Running breadth-first search Model-Checking with fp 83 and seed -1315165373259527273 with 1 worker on 8 cores with 1820MB heap and 64MB offheap memory (Windows 10 10.0 amd64, Oracle Corporation 1.8.0_131 x86_64, MSBDiskFPSet, DiskStateQueue).
+Parsing file D:\python\formalization\output2\t3\02\Cassandra\CIntegrated.tla
+Parsing file D:\python\formalization\output2\t3\02\Cassandra\CFrontierInterface.tla
+Parsing file D:\python\formalization\output2\t3\02\Cassandra\CCfgHelpers.tla
+Parsing file D:\python\formalization\output2\t3\02\Cassandra\CRead.tla
+Parsing file D:\python\formalization\output2\t3\02\Cassandra\CMigrate.tla
+Parsing file D:\python\formalization\output2\t3\02\Cassandra\CReplica.tla
+Parsing file D:\python\formalization\output2\t3\02\Cassandra\CWrite.tla
+Parsing file D:\python\formalization\output2\t3\02\Cassandra\CAuth.tla
+Parsing file D:\python\formalization\output2\t3\02\Cassandra\CCore.tla
+Parsing file C:\Users\27\AppData\Local\Temp\Naturals.tla
+Parsing file C:\Users\27\AppData\Local\Temp\FiniteSets.tla
+Parsing file C:\Users\27\AppData\Local\Temp\Sequences.tla
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module CCore
+Semantic processing of module CAuth
+Semantic processing of module CWrite
+Semantic processing of module CReplica
+Semantic processing of module CMigrate
+Semantic processing of module CRead
+Semantic processing of module CFrontierInterface
+Semantic processing of module CCfgHelpers
+Semantic processing of module CIntegrated
+Starting... (2026-08-04 22:47:26)
+Computing initial states...
+Computed 2 initial states...
+Finished computing initial states: 3 distinct states generated at 2026-08-04 22:47:27.
+Error: Invariant AuthSafety is violated.
+Error: The behavior up to this point is:
+State 1: <Initial predicate>
+/\ migrateState = (Part1 :> "Stable")
+/\ replicaHas = (Rep1 :> {} @@ Rep2 :> {} @@ Rep3 :> {})
+/\ copiedData = (Part1 :> {})
+/\ lastMigrate = [ src |-> N1,
+  dst |-> N1,
+  kind |-> "None",
+  authorized |-> FALSE,
+  principal |-> P1,
+  partition |-> Part1,
+  phase |-> "Start" ]
+/\ lastWrite = [kind |-> "None", authorized |-> FALSE, principal |-> P1, record |-> R1]
+/\ permission = (P1 :> (KS1 :> {"Manage"}) @@ P2 :> (KS1 :> {}))
+/\ shardOwner = (Part1 :> N1)
+/\ writeState = (R1 :> "None" @@ R2 :> "None")
+/\ migrateDst = (Part1 :> N1)
+/\ applied = {}
+/\ shardLocation = (Part1 :> {N1})
+/\ ackSet = (R1 :> {} @@ R2 :> {})
+/\ lastRead = [ level |-> "One",
+  kind |-> "None",
+  authorized |-> FALSE,
+  result |-> {},
+  principal |-> P1,
+  keyspace |-> KS1,
+  executed |-> FALSE ]
+/\ shardData = (Part1 :> {})
+/\ wal = {}
+/\ readResult = {}
+/\ migrateSrc = (Part1 :> N1)
+
+State 2: <DoRejectWrite line 30, col 5 to line 31, col 53 of module CIntegrated>
+/\ migrateState = (Part1 :> "Stable")
+/\ replicaHas = (Rep1 :> {} @@ Rep2 :> {} @@ Rep3 :> {})
+/\ copiedData = (Part1 :> {})
+/\ lastMigrate = [ src |-> N1,
+  dst |-> N1,
+  kind |-> "None",
+  authorized |-> FALSE,
+  principal |-> P1,
+  partition |-> Part1,
+  phase |-> "Start" ]
+/\ lastWrite = [kind |-> "Some", authorized |-> FALSE, principal |-> P2, record |-> R1]
+/\ permission = (P1 :> (KS1 :> {"Manage"}) @@ P2 :> (KS1 :> {}))
+/\ shardOwner = (Part1 :> N1)
+/\ writeState = (R1 :> "None" @@ R2 :> "None")
+/\ migrateDst = (Part1 :> N1)
+/\ applied = {}
+/\ shardLocation = (Part1 :> {N1})
+/\ ackSet = (R1 :> {} @@ R2 :> {})
+/\ lastRead = [ level |-> "One",
+  kind |-> "None",
+  authorized |-> FALSE,
+  result |-> {},
+  principal |-> P1,
+  keyspace |-> KS1,
+  executed |-> FALSE ]
+/\ shardData = (Part1 :> {})
+/\ wal = {}
+/\ readResult = {}
+/\ migrateSrc = (Part1 :> N1)
+
+38 states generated, 14 distinct states found, 12 states left on queue.
+The depth of the complete state graph search is 2.
+Finished in 00s at (2026-08-04 22:47:27)
+

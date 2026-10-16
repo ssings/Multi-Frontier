@@ -1,0 +1,17 @@
+model_family=ds
+provider=deepseek
+model=deepseek-v4-pro
+base_url=https://api.deepseek.com
+repeat_index=01
+started_at=2026-08-03T22:31:38+08:00
+docs_result=pass
+spec_result=pass
+failed_checks=none
+fetched_sources=8
+failed_sources=0
+api_calls=1
+spec_repair_rounds=0
+prompt_tokens=33926
+completion_tokens=8637
+total_tokens=42563
+finished_at=2026-08-03T22:34:29+08:00

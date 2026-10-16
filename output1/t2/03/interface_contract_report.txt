@@ -1,0 +1,16 @@
+INTERFACE CONTRACT CHECK: FAIL
+1. QIntegrated.tla must EXTENDS QFrontierInterface.
+2. QIntegrated.tla must EXTENDS QCfgHelpers.
+3. QIntegrated.tla is missing interface operator: GlobalVars
+4. QIntegrated.tla is missing interface operator: IntegratedAuthAction
+5. QIntegrated.tla is missing interface operator: IntegratedWriteAction
+6. QIntegrated.tla is missing interface operator: IntegratedMigrateAction
+7. QIntegrated.tla is missing interface operator: IntegratedSearchAction
+8. QIntegrated.tla is missing interface operator: GlobalTypeInvariant
+9. QIntegrated.tla is missing interface operator: AuthSafety
+10. QIntegrated.tla is missing interface operator: WalBeforeApply
+11. QIntegrated.tla is missing interface operator: ReplicaNotAheadOfWAL
+12. QIntegrated.tla is missing interface operator: MigrateSafety
+13. The invariant referenced by Qdrant.cfg does not exist: GlobalTypeInvariant
+14. The invariant referenced by Qdrant.cfg does not exist: AuthSafety
+15. QSearch.tla fixes successful query results to the empty set.

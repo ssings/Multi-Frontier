@@ -1,0 +1,185 @@
+time=2026-08-03T21:55:12+08:00
+stage=tlc
+model=deepseek-v4-pro
+error_index=5
+
+===== DETAILS =====
+===== COMMAND =====
+java -Xmx2g -cp D:\python\formalization\docs\tla2tools.jar tlc2.TLC -workers 1 -config D:\python\formalization\output1\Qdrant.cfg QIntegrated.tla
+===== RETURN CODE: 12; TIMED OUT: False =====
+TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
+Running breadth-first search Model-Checking with fp 25 and seed 1272301226159601746 with 1 worker on 8 cores with 1820MB heap and 64MB offheap memory (Windows 10 10.0 amd64, Oracle Corporation 1.8.0_131 x86_64, MSBDiskFPSet, DiskStateQueue).
+Parsing file D:\python\formalization\output1\ds\02\Qdrant\QIntegrated.tla
+Parsing file D:\python\formalization\output1\ds\02\Qdrant\QFrontierInterface.tla
+Parsing file D:\python\formalization\output1\ds\02\Qdrant\QCfgHelpers.tla
+Parsing file D:\python\formalization\output1\ds\02\Qdrant\QSearch.tla
+Parsing file D:\python\formalization\output1\ds\02\Qdrant\QMigrate.tla
+Parsing file D:\python\formalization\output1\ds\02\Qdrant\QReplica.tla
+Parsing file D:\python\formalization\output1\ds\02\Qdrant\QWrite.tla
+Parsing file D:\python\formalization\output1\ds\02\Qdrant\QAuth.tla
+Parsing file D:\python\formalization\output1\ds\02\Qdrant\QCore.tla
+Parsing file C:\Users\27\AppData\Local\Temp\Naturals.tla
+Parsing file C:\Users\27\AppData\Local\Temp\FiniteSets.tla
+Parsing file C:\Users\27\AppData\Local\Temp\Sequences.tla
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module QCore
+Semantic processing of module QAuth
+Semantic processing of module QWrite
+Semantic processing of module QReplica
+Semantic processing of module QMigrate
+Semantic processing of module QSearch
+Semantic processing of module QFrontierInterface
+Semantic processing of module QCfgHelpers
+Semantic processing of module QIntegrated
+Starting... (2026-08-03 21:55:10)
+Computing initial states...
+Finished computing initial states: 1 distinct state generated at 2026-08-03 21:55:11.
+Error: Invariant AuthSafety is violated.
+Error: The behavior up to this point is:
+State 1: <Initial predicate>
+/\ lastSearch = [ level |-> "One",
+  authorized |-> FALSE,
+  principal |-> P1,
+  collection |-> C1,
+  kind |-> "None",
+  result |-> {},
+  executed |-> FALSE ]
+/\ migrateState = (S1 :> "Stable")
+/\ replicaHas = (R1 :> {} @@ R2 :> {} @@ R3 :> {})
+/\ copiedData = (S1 :> {})
+/\ lastMigrate = [ authorized |-> FALSE,
+  principal |-> P1,
+  shard |-> S1,
+  kind |-> "None",
+  srcNode |-> N1,
+  dstNode |-> N1,
+  phase |-> "Start" ]
+/\ lastWrite = [ authorized |-> FALSE,
+  principal |-> P1,
+  collection |-> C1,
+  kind |-> "None",
+  point |-> PT1 ]
+/\ permission = (P1 :> (C1 :> {"Manage"}) @@ P2 :> (C1 :> {}))
+/\ shardOwner = (S1 :> N1)
+/\ writeState = (PT1 :> "None" @@ PT2 :> "None")
+/\ migrateDst = (S1 :> N1)
+/\ applied = {}
+/\ shardLocation = (S1 :> {N1})
+/\ searchResult = {}
+/\ ackSet = (PT1 :> {} @@ PT2 :> {})
+/\ shardData = (S1 :> {})
+/\ wal = {}
+/\ migrateSrc = (S1 :> N1)
+
+State 2: <Next line 17, col 8 to line 21, col 48 of module QIntegrated>
+/\ lastSearch = [ level |-> "One",
+  authorized |-> FALSE,
+  principal |-> P1,
+  collection |-> C1,
+  kind |-> "None",
+  result |-> {},
+  executed |-> FALSE ]
+/\ migrateState = (S1 :> "Stable")
+/\ replicaHas = (R1 :> {} @@ R2 :> {} @@ R3 :> {})
+/\ copiedData = (S1 :> {})
+/\ lastMigrate = [ authorized |-> FALSE,
+  principal |-> P1,
+  shard |-> S1,
+  kind |-> "None",
+  srcNode |-> N1,
+  dstNode |-> N1,
+  phase |-> "Start" ]
+/\ lastWrite = [ authorized |-> FALSE,
+  principal |-> P1,
+  collection |-> C1,
+  kind |-> "None",
+  point |-> PT1 ]
+/\ permission = (P1 :> (C1 :> {"Manage"}) @@ P2 :> (C1 :> {"Read"}))
+/\ shardOwner = (S1 :> N1)
+/\ writeState = (PT1 :> "None" @@ PT2 :> "None")
+/\ migrateDst = (S1 :> N1)
+/\ applied = {}
+/\ shardLocation = (S1 :> {N1})
+/\ searchResult = {}
+/\ ackSet = (PT1 :> {} @@ PT2 :> {})
+/\ shardData = (S1 :> {})
+/\ wal = {}
+/\ migrateSrc = (S1 :> N1)
+
+State 3: <Search line 45, col 5 to line 62, col 71 of module QSearch>
+/\ lastSearch = [ level |-> "One",
+  authorized |-> TRUE,
+  principal |-> P2,
+  collection |-> C1,
+  kind |-> "Some",
+  result |-> {},
+  executed |-> TRUE ]
+/\ migrateState = (S1 :> "Stable")
+/\ replicaHas = (R1 :> {} @@ R2 :> {} @@ R3 :> {})
+/\ copiedData = (S1 :> {})
+/\ lastMigrate = [ authorized |-> FALSE,
+  principal |-> P1,
+  shard |-> S1,
+  kind |-> "None",
+  srcNode |-> N1,
+  dstNode |-> N1,
+  phase |-> "Start" ]
+/\ lastWrite = [ authorized |-> FALSE,
+  principal |-> P1,
+  collection |-> C1,
+  kind |-> "None",
+  point |-> PT1 ]
+/\ permission = (P1 :> (C1 :> {"Manage"}) @@ P2 :> (C1 :> {"Read"}))
+/\ shardOwner = (S1 :> N1)
+/\ writeState = (PT1 :> "None" @@ PT2 :> "None")
+/\ migrateDst = (S1 :> N1)
+/\ applied = {}
+/\ shardLocation = (S1 :> {N1})
+/\ searchResult = {}
+/\ ackSet = (PT1 :> {} @@ PT2 :> {})
+/\ shardData = (S1 :> {})
+/\ wal = {}
+/\ migrateSrc = (S1 :> N1)
+
+State 4: <Next line 17, col 8 to line 21, col 48 of module QIntegrated>
+/\ lastSearch = [ level |-> "One",
+  authorized |-> TRUE,
+  principal |-> P2,
+  collection |-> C1,
+  kind |-> "Some",
+  result |-> {},
+  executed |-> TRUE ]
+/\ migrateState = (S1 :> "Stable")
+/\ replicaHas = (R1 :> {} @@ R2 :> {} @@ R3 :> {})
+/\ copiedData = (S1 :> {})
+/\ lastMigrate = [ authorized |-> FALSE,
+  principal |-> P1,
+  shard |-> S1,
+  kind |-> "None",
+  srcNode |-> N1,
+  dstNode |-> N1,
+  phase |-> "Start" ]
+/\ lastWrite = [ authorized |-> FALSE,
+  principal |-> P1,
+  collection |-> C1,
+  kind |-> "None",
+  point |-> PT1 ]
+/\ permission = (P1 :> (C1 :> {"Manage"}) @@ P2 :> (C1 :> {}))
+/\ shardOwner = (S1 :> N1)
+/\ writeState = (PT1 :> "None" @@ PT2 :> "None")
+/\ migrateDst = (S1 :> N1)
+/\ applied = {}
+/\ shardLocation = (S1 :> {N1})
+/\ searchResult = {}
+/\ ackSet = (PT1 :> {} @@ PT2 :> {})
+/\ shardData = (S1 :> {})
+/\ wal = {}
+/\ migrateSrc = (S1 :> N1)
+
+4297 states generated, 1277 distinct states found, 1159 states left on queue.
+The depth of the complete state graph search is 4.
+The average outdegree of the complete state graph is 11 (minimum is 0, the maximum 26 and the 95th percentile is 23).
+Finished in 01s at (2026-08-03 21:55:11)
+

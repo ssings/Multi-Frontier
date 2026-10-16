@@ -1,0 +1,25 @@
+time=2026-08-09T18:41:04+08:00
+stage=cfg
+model=gpt-5.6-terra
+error_index=21
+
+===== DETAILS =====
+helper operator referenced by cfg is not visible in entry module: InitialPermissionsCfg
+helper operator referenced by cfg is not visible in entry module: InitialRoutingCfg
+helper operator referenced by cfg is not visible in entry module: ItemPartitionCfg
+helper operator referenced by cfg is not visible in entry module: ItemTableCfg
+helper operator referenced by cfg is not visible in entry module: MutationItemCfg
+helper operator referenced by cfg is not visible in entry module: MutationKindCfg
+helper operator referenced by cfg is not visible in entry module: MutationRankCfg
+helper operator referenced by cfg is not visible in entry module: MutationVersionCfg
+helper operator referenced by cfg is not visible in entry module: PartitionRangeCfg
+helper operator referenced by cfg is not visible in entry module: PrincipalRoleCfg
+helper operator referenced by cfg is not visible in entry module: RangeKeyspaceCfg
+helper operator referenced by cfg is not visible in entry module: ReadCoordinatorCfg
+helper operator referenced by cfg is not visible in entry module: ReadItemCfg
+helper operator referenced by cfg is not visible in entry module: ReadLevelCfg
+helper operator referenced by cfg is not visible in entry module: ReadPrincipalCfg
+helper operator referenced by cfg is not visible in entry module: ReplicationFactorCfg
+helper operator referenced by cfg is not visible in entry module: RoleMembersCfg
+helper operator referenced by cfg is not visible in entry module: RoleReachCfg
+helper operator referenced by cfg is not visible in entry module: TableKeyspaceCfg

@@ -1,0 +1,87 @@
+time=2026-08-04T22:44:55+08:00
+stage=tlc
+model=deepseek-v4-pro
+error_index=4
+
+===== DETAILS =====
+TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
+Running breadth-first search Model-Checking with fp 18 and seed 1575353696145038079 with 1 worker on 8 cores with 1820MB heap and 64MB offheap memory (Windows 10 10.0 amd64, Oracle Corporation 1.8.0_131 x86_64, MSBDiskFPSet, DiskStateQueue).
+Parsing file D:\python\formalization\output2\t3\02\Cassandra\CIntegrated.tla
+Parsing file D:\python\formalization\output2\t3\02\Cassandra\CFrontierInterface.tla
+Parsing file D:\python\formalization\output2\t3\02\Cassandra\CCfgHelpers.tla
+Parsing file D:\python\formalization\output2\t3\02\Cassandra\CRead.tla
+Parsing file D:\python\formalization\output2\t3\02\Cassandra\CMigrate.tla
+Parsing file D:\python\formalization\output2\t3\02\Cassandra\CReplica.tla
+Parsing file D:\python\formalization\output2\t3\02\Cassandra\CWrite.tla
+Parsing file D:\python\formalization\output2\t3\02\Cassandra\CAuth.tla
+Parsing file D:\python\formalization\output2\t3\02\Cassandra\CCore.tla
+Parsing file C:\Users\27\AppData\Local\Temp\Naturals.tla
+Parsing file C:\Users\27\AppData\Local\Temp\FiniteSets.tla
+Parsing file C:\Users\27\AppData\Local\Temp\Sequences.tla
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module CCore
+Semantic processing of module CAuth
+Semantic processing of module CWrite
+Semantic processing of module CReplica
+Semantic processing of module CMigrate
+Semantic processing of module CRead
+Semantic processing of module CFrontierInterface
+Semantic processing of module CCfgHelpers
+Semantic processing of module CIntegrated
+Semantic errors:
+
+*** Errors: 4
+
+line 5, col 1 to line 5, col 26 of module CIntegrated
+
+Operator AuthVars already defined or declared.
+
+
+line 6, col 1 to line 6, col 83 of module CIntegrated
+
+Operator WriteVars already defined or declared.
+
+
+line 7, col 1 to line 7, col 112 of module CIntegrated
+
+Operator MigrateVars already defined or declared.
+
+
+line 8, col 1 to line 8, col 36 of module CIntegrated
+
+Operator ReadVars already defined or declared.
+
+
+*** Warnings: 4
+
+line 5, col 1 to line 5, col 26 of module CIntegrated
+
+Multiple declarations or definitions for symbol AuthVars.  
+This duplicates the one at line 7, col 1 to line 7, col 26 of module CAuth.
+
+
+line 6, col 1 to line 6, col 83 of module CIntegrated
+
+Multiple declarations or definitions for symbol WriteVars.  
+This duplicates the one at line 14, col 1 to line 14, col 83 of module CWrite.
+
+
+line 7, col 1 to line 7, col 112 of module CIntegrated
+
+Multiple declarations or definitions for symbol MigrateVars.  
+This duplicates the one at line 14, col 1 to line 14, col 112 of module CMigrate.
+
+
+line 8, col 1 to line 8, col 36 of module CIntegrated
+
+Multiple declarations or definitions for symbol ReadVars.  
+This duplicates the one at line 9, col 1 to line 9, col 36 of module CRead.
+
+
+
+Starting... (2026-08-04 22:44:55)
+Error: Parsing or semantic analysis failed.
+Finished in 00s at (2026-08-04 22:44:55)
+

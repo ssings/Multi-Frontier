@@ -1,0 +1,109 @@
+time=2026-08-04T20:00:20+08:00
+stage=tlc
+model=deepseek-v4-pro
+error_index=3
+
+===== DETAILS =====
+===== COMMAND =====
+java -Xmx2g -cp D:\python\formalization\docs\tla2tools.jar tlc2.TLC -workers 1 -config D:\python\formalization\output1\Qdrant.cfg QIntegrated.tla
+===== RETURN CODE: 75; TIMED OUT: False =====
+TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
+Running breadth-first search Model-Checking with fp 92 and seed 4105622861116024680 with 1 worker on 8 cores with 1820MB heap and 64MB offheap memory (Windows 10 10.0 amd64, Oracle Corporation 1.8.0_131 x86_64, MSBDiskFPSet, DiskStateQueue).
+Parsing file D:\python\formalization\output1\t2\03\Qdrant\QIntegrated.tla
+Parsing file D:\python\formalization\output1\t2\03\Qdrant\QFrontierInterface.tla
+Parsing file D:\python\formalization\output1\t2\03\Qdrant\QCfgHelpers.tla
+Parsing file D:\python\formalization\output1\t2\03\Qdrant\QSearch.tla
+Parsing file D:\python\formalization\output1\t2\03\Qdrant\QMigrate.tla
+Parsing file D:\python\formalization\output1\t2\03\Qdrant\QReplica.tla
+Parsing file D:\python\formalization\output1\t2\03\Qdrant\QWrite.tla
+Parsing file D:\python\formalization\output1\t2\03\Qdrant\QAuth.tla
+Parsing file D:\python\formalization\output1\t2\03\Qdrant\QCore.tla
+Parsing file C:\Users\27\AppData\Local\Temp\Naturals.tla
+Parsing file C:\Users\27\AppData\Local\Temp\FiniteSets.tla
+Parsing file C:\Users\27\AppData\Local\Temp\Sequences.tla
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module QCore
+Semantic processing of module QAuth
+Semantic processing of module QWrite
+Semantic processing of module QReplica
+Semantic processing of module QMigrate
+Semantic processing of module QSearch
+Semantic processing of module QFrontierInterface
+Semantic processing of module QCfgHelpers
+Semantic processing of module QIntegrated
+Starting... (2026-08-04 20:00:19)
+Computing initial states...
+Computed 2 initial states...
+Computed 4 initial states...
+Finished computing initial states: 6 distinct states generated at 2026-08-04 20:00:20.
+Error: Successor state is not completely specified by action IntegratedMigrateAction of the next-state relation. The following variable is not assigned: shardData.
+
+Error: The behavior up to this point is:
+State 1: <Initial predicate>
+/\ lastSearch = [ kind |-> "None",
+  authorized |-> FALSE,
+  level |-> "One",
+  executed |-> FALSE,
+  result |-> {},
+  principal |-> P1,
+  collection |-> C1 ]
+/\ migrateState = (S1 :> "Stable")
+/\ replicaHas = (R1 :> {} @@ R2 :> {} @@ R3 :> {})
+/\ copiedData = (S1 :> {})
+/\ lastMigrate = [ kind |-> "None",
+  authorized |-> FALSE,
+  principal |-> P1,
+  shard |-> S1,
+  src |-> N1,
+  dst |-> N1,
+  phase |-> "Start" ]
+/\ lastWrite = [kind |-> "None", authorized |-> FALSE, principal |-> P1, collection |-> C1]
+/\ permission = (P1 :> (C1 :> {}) @@ P2 :> (C1 :> {"Manage"}))
+/\ shardOwner = (S1 :> N1)
+/\ writeState = (PT1 :> "None" @@ PT2 :> "None")
+/\ migrateDst = (S1 :> N1)
+/\ applied = {}
+/\ shardLocation = (S1 :> {N1})
+/\ searchResult = {}
+/\ ackSet = (PT1 :> {} @@ PT2 :> {})
+/\ shardData = (S1 :> {})
+/\ wal = {}
+/\ migrateSrc = (S1 :> N1)
+
+State 2: <IntegratedMigrateAction line 22, col 5 to line 24, col 76 of module QIntegrated>
+/\ lastSearch = [ kind |-> "None",
+  authorized |-> FALSE,
+  level |-> "One",
+  executed |-> FALSE,
+  result |-> {},
+  principal |-> P1,
+  collection |-> C1 ]
+/\ migrateState = (S1 :> "Migratering")
+/\ replicaHas = (R1 :> {} @@ R2 :> {} @@ R3 :> {})
+/\ copiedData = (S1 :> {})
+/\ lastMigrate = [ kind |-> "Some",
+  authorized |-> TRUE,
+  principal |-> P2,
+  shard |-> S1,
+  src |-> N1,
+  dst |-> N2,
+  phase |-> "Start" ]
+/\ lastWrite = [kind |-> "None", authorized |-> FALSE, principal |-> P1, collection |-> C1]
+/\ permission = (P1 :> (C1 :> {}) @@ P2 :> (C1 :> {"Manage"}))
+/\ shardOwner = (S1 :> N1)
+/\ writeState = (PT1 :> "None" @@ PT2 :> "None")
+/\ migrateDst = (S1 :> N2)
+/\ applied = {}
+/\ shardLocation = (S1 :> {N1, N2})
+/\ searchResult = {}
+/\ ackSet = (PT1 :> {} @@ PT2 :> {})
+/\ shardData = null
+/\ wal = {}
+/\ migrateSrc = (S1 :> N1)
+
+35 states generated, 14 distinct states found, 13 states left on queue.
+The depth of the complete state graph search is 2.
+Finished in 00s at (2026-08-04 20:00:20)
+

@@ -1,0 +1,16 @@
+INTERFACE CONTRACT CHECK: FAIL
+1. QFrontierInterface.tla missing interface operator: CommitFrontierSafety
+2. QFrontierInterface.tla missing interface operator: ReplicaFrontierSafety
+3. QFrontierInterface.tla missing interface operator: QueryFrontierSafety
+4. QFrontierInterface.tla missing interface operator: MigrateFrontierSafety
+5. QFrontierInterface.tla missing interface operator: SearchFrontierSafety
+6. QFrontierInterface.tla missing interface operator: SearchResultSafety
+7. QIntegrated.tla missing interface operator: IntegratedAuthAction
+8. QIntegrated.tla missing interface operator: IntegratedWriteAction
+9. QIntegrated.tla missing interface operator: IntegratedMigrateAction
+10. QIntegrated.tla missing interface operator: IntegratedSearchAction
+11. QIntegrated.tla missing interface operator: AuthSafety
+12. QIntegrated.tla missing interface operator: WalBeforeApply
+13. QIntegrated.tla missing interface operator: ReplicaNotAheadOfWAL
+14. QIntegrated.tla missing interface operator: MigrateSafety
+15. QSearch.tla fixes successful query results to the empty set.

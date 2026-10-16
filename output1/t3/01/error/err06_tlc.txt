@@ -1,0 +1,210 @@
+model_family=ds
+time=2026-08-03T20:56:20+08:00
+stage=tlc
+model=deepseek-v4-pro
+
+===== ERROR DETAILS =====
+===== COMMAND =====
+java -Xmx2g -cp D:\python\formalization\docs\tla2tools.jar tlc2.TLC -workers 1 -config D:\python\formalization\output1\Qdrant.cfg QIntegrated.tla
+===== RETURN CODE: 12; TIMED OUT: False =====
+TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
+Running breadth-first search Model-Checking with fp 3 and seed -3855738959651523766 with 1 worker on 8 cores with 1820MB heap and 64MB offheap memory (Windows 10 10.0 amd64, Oracle Corporation 1.8.0_131 x86_64, MSBDiskFPSet, DiskStateQueue).
+Parsing file D:\python\formalization\output1\ds\01\Qdrant\QIntegrated.tla
+Parsing file D:\python\formalization\output1\ds\01\Qdrant\QFrontierInterface.tla
+Parsing file D:\python\formalization\output1\ds\01\Qdrant\QCfgHelpers.tla
+Parsing file D:\python\formalization\output1\ds\01\Qdrant\QSearch.tla
+Parsing file D:\python\formalization\output1\ds\01\Qdrant\QMigrate.tla
+Parsing file D:\python\formalization\output1\ds\01\Qdrant\QReplica.tla
+Parsing file D:\python\formalization\output1\ds\01\Qdrant\QWrite.tla
+Parsing file D:\python\formalization\output1\ds\01\Qdrant\QAuth.tla
+Parsing file D:\python\formalization\output1\ds\01\Qdrant\QCore.tla
+Parsing file C:\Users\27\AppData\Local\Temp\Naturals.tla
+Parsing file C:\Users\27\AppData\Local\Temp\FiniteSets.tla
+Parsing file C:\Users\27\AppData\Local\Temp\Sequences.tla
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module QCore
+Semantic processing of module QAuth
+Semantic processing of module QWrite
+Semantic processing of module QReplica
+Semantic processing of module QMigrate
+Semantic processing of module QSearch
+Semantic processing of module QFrontierInterface
+Semantic processing of module QCfgHelpers
+Semantic processing of module QIntegrated
+Starting... (2026-08-03 20:56:18)
+Computing initial states...
+Finished computing initial states: 1 distinct state generated at 2026-08-03 20:56:19.
+Error: Invariant AuthSafety is violated.
+Error: The behavior up to this point is:
+State 1: <Initial predicate>
+/\ lastSearch = [ kind |-> "None",
+  authorized |-> FALSE,
+  executed |-> FALSE,
+  result |-> {},
+  level |-> "One",
+  principal |-> P1,
+  collection |-> C1 ]
+/\ migrateState = (S1 :> "Stable")
+/\ replicaHas = (R1 :> {} @@ R2 :> {} @@ R3 :> {})
+/\ copiedData = (S1 :> {})
+/\ lastMigrate = [ kind |-> "None",
+  authorized |-> FALSE,
+  phase |-> "Start",
+  principal |-> P1,
+  shard |-> S1 ]
+/\ lastWrite = [ kind |-> "None",
+  authorized |-> FALSE,
+  point |-> PT1,
+  principal |-> P1,
+  collection |-> C1 ]
+/\ permission = (P1 :> (C1 :> {"Read", "Write", "Manage", "Migrate"}) @@ P2 :> (C1 :> {}))
+/\ shardOwner = (S1 :> N1)
+/\ writeState = (PT1 :> "None" @@ PT2 :> "None")
+/\ migrateDst = (S1 :> N1)
+/\ applied = {}
+/\ shardLocation = (S1 :> {N1})
+/\ searchResult = {}
+/\ ackSet = (PT1 :> {} @@ PT2 :> {})
+/\ shardData = (S1 :> {})
+/\ wal = {}
+/\ migrateSrc = (S1 :> N1)
+
+State 2: <IntegratedWriteAction line 28, col 8 to line 32, col 48 of module QIntegrated>
+/\ lastSearch = [ kind |-> "None",
+  authorized |-> FALSE,
+  executed |-> FALSE,
+  result |-> {},
+  level |-> "One",
+  principal |-> P1,
+  collection |-> C1 ]
+/\ migrateState = (S1 :> "Stable")
+/\ replicaHas = (R1 :> {} @@ R2 :> {} @@ R3 :> {})
+/\ copiedData = (S1 :> {})
+/\ lastMigrate = [ kind |-> "None",
+  authorized |-> FALSE,
+  phase |-> "Start",
+  principal |-> P1,
+  shard |-> S1 ]
+/\ lastWrite = [ kind |-> "Some",
+  authorized |-> TRUE,
+  point |-> PT1,
+  principal |-> P1,
+  collection |-> C1 ]
+/\ permission = (P1 :> (C1 :> {"Read", "Write", "Manage", "Migrate"}) @@ P2 :> (C1 :> {}))
+/\ shardOwner = (S1 :> N1)
+/\ writeState = (PT1 :> "WalLogged" @@ PT2 :> "None")
+/\ migrateDst = (S1 :> N1)
+/\ applied = {}
+/\ shardLocation = (S1 :> {N1})
+/\ searchResult = {}
+/\ ackSet = (PT1 :> {} @@ PT2 :> {})
+/\ shardData = (S1 :> {})
+/\ wal = {PT1}
+/\ migrateSrc = (S1 :> N1)
+
+State 3: <IntegratedWriteAction line 28, col 8 to line 32, col 48 of module QIntegrated>
+/\ lastSearch = [ kind |-> "None",
+  authorized |-> FALSE,
+  executed |-> FALSE,
+  result |-> {},
+  level |-> "One",
+  principal |-> P1,
+  collection |-> C1 ]
+/\ migrateState = (S1 :> "Stable")
+/\ replicaHas = (R1 :> {PT1} @@ R2 :> {} @@ R3 :> {})
+/\ copiedData = (S1 :> {})
+/\ lastMigrate = [ kind |-> "None",
+  authorized |-> FALSE,
+  phase |-> "Start",
+  principal |-> P1,
+  shard |-> S1 ]
+/\ lastWrite = [ kind |-> "Some",
+  authorized |-> TRUE,
+  point |-> PT1,
+  principal |-> P1,
+  collection |-> C1 ]
+/\ permission = (P1 :> (C1 :> {"Read", "Write", "Manage", "Migrate"}) @@ P2 :> (C1 :> {}))
+/\ shardOwner = (S1 :> N1)
+/\ writeState = (PT1 :> "WalLogged" @@ PT2 :> "None")
+/\ migrateDst = (S1 :> N1)
+/\ applied = {}
+/\ shardLocation = (S1 :> {N1})
+/\ searchResult = {}
+/\ ackSet = (PT1 :> {R1} @@ PT2 :> {})
+/\ shardData = (S1 :> {})
+/\ wal = {PT1}
+/\ migrateSrc = (S1 :> N1)
+
+State 4: <IntegratedWriteAction line 28, col 8 to line 32, col 48 of module QIntegrated>
+/\ lastSearch = [ kind |-> "None",
+  authorized |-> FALSE,
+  executed |-> FALSE,
+  result |-> {},
+  level |-> "One",
+  principal |-> P1,
+  collection |-> C1 ]
+/\ migrateState = (S1 :> "Stable")
+/\ replicaHas = (R1 :> {PT1} @@ R2 :> {PT1} @@ R3 :> {})
+/\ copiedData = (S1 :> {})
+/\ lastMigrate = [ kind |-> "None",
+  authorized |-> FALSE,
+  phase |-> "Start",
+  principal |-> P1,
+  shard |-> S1 ]
+/\ lastWrite = [ kind |-> "Some",
+  authorized |-> TRUE,
+  point |-> PT1,
+  principal |-> P1,
+  collection |-> C1 ]
+/\ permission = (P1 :> (C1 :> {"Read", "Write", "Manage", "Migrate"}) @@ P2 :> (C1 :> {}))
+/\ shardOwner = (S1 :> N1)
+/\ writeState = (PT1 :> "WalLogged" @@ PT2 :> "None")
+/\ migrateDst = (S1 :> N1)
+/\ applied = {}
+/\ shardLocation = (S1 :> {N1})
+/\ searchResult = {}
+/\ ackSet = (PT1 :> {R1, R2} @@ PT2 :> {})
+/\ shardData = (S1 :> {})
+/\ wal = {PT1}
+/\ migrateSrc = (S1 :> N1)
+
+State 5: <IntegratedWriteAction line 28, col 8 to line 32, col 48 of module QIntegrated>
+/\ lastSearch = [ kind |-> "None",
+  authorized |-> FALSE,
+  executed |-> FALSE,
+  result |-> {},
+  level |-> "One",
+  principal |-> P1,
+  collection |-> C1 ]
+/\ migrateState = (S1 :> "Stable")
+/\ replicaHas = (R1 :> {PT1} @@ R2 :> {PT1} @@ R3 :> {})
+/\ copiedData = (S1 :> {})
+/\ lastMigrate = [ kind |-> "None",
+  authorized |-> FALSE,
+  phase |-> "Start",
+  principal |-> P1,
+  shard |-> S1 ]
+/\ lastWrite = [ kind |-> "Some",
+  authorized |-> TRUE,
+  point |-> PT1,
+  principal |-> P1,
+  collection |-> C1 ]
+/\ permission = (P1 :> (C1 :> {"Read", "Write", "Manage", "Migrate"}) @@ P2 :> (C1 :> {}))
+/\ shardOwner = (S1 :> N1)
+/\ writeState = (PT1 :> "Applied" @@ PT2 :> "None")
+/\ migrateDst = (S1 :> N1)
+/\ applied = {PT1}
+/\ shardLocation = (S1 :> {N1})
+/\ searchResult = {}
+/\ ackSet = (PT1 :> {R1, R2} @@ PT2 :> {})
+/\ shardData = (S1 :> {PT1})
+/\ wal = {PT1}
+/\ migrateSrc = (S1 :> N1)
+
+78098 states generated, 8229 distinct states found, 6858 states left on queue.
+The depth of the complete state graph search is 5.
+The average outdegree of the complete state graph is 6 (minimum is 0, the maximum 21 and the 95th percentile is 15).
+Finished in 01s at (2026-08-03 20:56:20)
+

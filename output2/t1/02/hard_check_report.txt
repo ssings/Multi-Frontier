@@ -1,0 +1,21 @@
+Cassandra Hard Check Report
+
+discovered_tla_files=9
+entry_module=CIntegrated
+sany_order=CCore.tla,CAuth.tla,CCfgHelpers.tla,CWrite.tla,CReplica.tla,CMigrate.tla,CRead.tla,CFrontierInterface.tla,CIntegrated.tla
+
+[TLA File Hard Check]
+PASS
+
+[Module Dependency Hard Check]
+PASS
+
+[cfg Hard Check]
+PASS
+
+[Regression and Cross-Database Pollution Check]
+1. CCore.tla contains tautologically true critical safety properties or type invariants
+1. CReplica.tla contains tautologically true critical safety properties or type invariants
+
+overall=fail
+note=This report does not use keywords to determine authorization, write, read, migration, or Frontier semantics; these contents are confirmed by TLC coverage, reachability tests, and manual logic checks.

@@ -1,0 +1,230 @@
+time=2026-08-04T22:50:16+08:00
+stage=tlc
+model=deepseek-v4-pro
+error_index=8
+
+===== DETAILS =====
+TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
+Running breadth-first search Model-Checking with fp 25 and seed 1523257236767089976 with 1 worker on 8 cores with 1820MB heap and 64MB offheap memory (Windows 10 10.0 amd64, Oracle Corporation 1.8.0_131 x86_64, MSBDiskFPSet, DiskStateQueue).
+Parsing file D:\python\formalization\output2\t3\02\Cassandra\CIntegrated.tla
+Parsing file D:\python\formalization\output2\t3\02\Cassandra\CFrontierInterface.tla
+Parsing file D:\python\formalization\output2\t3\02\Cassandra\CCfgHelpers.tla
+Parsing file D:\python\formalization\output2\t3\02\Cassandra\CRead.tla
+Parsing file D:\python\formalization\output2\t3\02\Cassandra\CMigrate.tla
+Parsing file D:\python\formalization\output2\t3\02\Cassandra\CReplica.tla
+Parsing file D:\python\formalization\output2\t3\02\Cassandra\CWrite.tla
+Parsing file D:\python\formalization\output2\t3\02\Cassandra\CAuth.tla
+Parsing file D:\python\formalization\output2\t3\02\Cassandra\CCore.tla
+Parsing file C:\Users\27\AppData\Local\Temp\Naturals.tla
+Parsing file C:\Users\27\AppData\Local\Temp\FiniteSets.tla
+Parsing file C:\Users\27\AppData\Local\Temp\Sequences.tla
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module CCore
+Semantic processing of module CAuth
+Semantic processing of module CWrite
+Semantic processing of module CReplica
+Semantic processing of module CMigrate
+Semantic processing of module CRead
+Semantic processing of module CFrontierInterface
+Semantic processing of module CCfgHelpers
+Semantic processing of module CIntegrated
+Starting... (2026-08-04 22:50:12)
+Computing initial states...
+Computed 2 initial states...
+Finished computing initial states: 3 distinct states generated at 2026-08-04 22:50:12.
+Progress(6) at 2026-08-04 22:50:15: 327,962 states generated (327,962 s/min), 25,438 distinct states found (25,438 ds/min), 19,820 states left on queue.
+Error: Invariant FrontierSafety is violated.
+Error: The behavior up to this point is:
+State 1: <Initial predicate>
+/\ migrateState = (Part1 :> "Stable")
+/\ replicaHas = (Rep1 :> {} @@ Rep2 :> {} @@ Rep3 :> {})
+/\ copiedData = (Part1 :> {})
+/\ lastMigrate = [ src |-> N1,
+  dst |-> N1,
+  kind |-> "None",
+  authorized |-> FALSE,
+  principal |-> P1,
+  partition |-> Part1,
+  phase |-> "Start" ]
+/\ lastWrite = [kind |-> "None", authorized |-> FALSE, principal |-> P1, record |-> R1]
+/\ permission = (P1 :> (KS1 :> {"Manage"}) @@ P2 :> (KS1 :> {}))
+/\ shardOwner = (Part1 :> N1)
+/\ writeState = (R1 :> "None" @@ R2 :> "None")
+/\ migrateDst = (Part1 :> N1)
+/\ applied = {}
+/\ shardLocation = (Part1 :> {N1})
+/\ ackSet = (R1 :> {} @@ R2 :> {})
+/\ lastRead = [ level |-> "One",
+  kind |-> "None",
+  authorized |-> FALSE,
+  result |-> {},
+  principal |-> P1,
+  keyspace |-> KS1,
+  executed |-> FALSE ]
+/\ shardData = (Part1 :> {})
+/\ wal = {}
+/\ readResult = {}
+/\ migrateSrc = (Part1 :> N1)
+
+State 2: <DoReceiveWrite line 26, col 5 to line 27, col 53 of module CIntegrated>
+/\ migrateState = (Part1 :> "Stable")
+/\ replicaHas = (Rep1 :> {} @@ Rep2 :> {} @@ Rep3 :> {})
+/\ copiedData = (Part1 :> {})
+/\ lastMigrate = [ src |-> N1,
+  dst |-> N1,
+  kind |-> "None",
+  authorized |-> FALSE,
+  principal |-> P1,
+  partition |-> Part1,
+  phase |-> "Start" ]
+/\ lastWrite = [kind |-> "Some", authorized |-> TRUE, principal |-> P1, record |-> R1]
+/\ permission = (P1 :> (KS1 :> {"Manage"}) @@ P2 :> (KS1 :> {}))
+/\ shardOwner = (Part1 :> N1)
+/\ writeState = (R1 :> "CommitLogged" @@ R2 :> "None")
+/\ migrateDst = (Part1 :> N1)
+/\ applied = {}
+/\ shardLocation = (Part1 :> {N1})
+/\ ackSet = (R1 :> {} @@ R2 :> {})
+/\ lastRead = [ level |-> "One",
+  kind |-> "None",
+  authorized |-> FALSE,
+  result |-> {},
+  principal |-> P1,
+  keyspace |-> KS1,
+  executed |-> FALSE ]
+/\ shardData = (Part1 :> {})
+/\ wal = {R1}
+/\ readResult = {}
+/\ migrateSrc = (Part1 :> N1)
+
+State 3: <DoReplicaAck line 34, col 5 to line 35, col 53 of module CIntegrated>
+/\ migrateState = (Part1 :> "Stable")
+/\ replicaHas = (Rep1 :> {R1} @@ Rep2 :> {} @@ Rep3 :> {})
+/\ copiedData = (Part1 :> {})
+/\ lastMigrate = [ src |-> N1,
+  dst |-> N1,
+  kind |-> "None",
+  authorized |-> FALSE,
+  principal |-> P1,
+  partition |-> Part1,
+  phase |-> "Start" ]
+/\ lastWrite = [kind |-> "Some", authorized |-> TRUE, principal |-> P1, record |-> R1]
+/\ permission = (P1 :> (KS1 :> {"Manage"}) @@ P2 :> (KS1 :> {}))
+/\ shardOwner = (Part1 :> N1)
+/\ writeState = (R1 :> "CommitLogged" @@ R2 :> "None")
+/\ migrateDst = (Part1 :> N1)
+/\ applied = {}
+/\ shardLocation = (Part1 :> {N1})
+/\ ackSet = (R1 :> {Rep1} @@ R2 :> {})
+/\ lastRead = [ level |-> "One",
+  kind |-> "None",
+  authorized |-> FALSE,
+  result |-> {},
+  principal |-> P1,
+  keyspace |-> KS1,
+  executed |-> FALSE ]
+/\ shardData = (Part1 :> {})
+/\ wal = {R1}
+/\ readResult = {}
+/\ migrateSrc = (Part1 :> N1)
+
+State 4: <DoReplicaAck line 34, col 5 to line 35, col 53 of module CIntegrated>
+/\ migrateState = (Part1 :> "Stable")
+/\ replicaHas = (Rep1 :> {R1} @@ Rep2 :> {R1} @@ Rep3 :> {})
+/\ copiedData = (Part1 :> {})
+/\ lastMigrate = [ src |-> N1,
+  dst |-> N1,
+  kind |-> "None",
+  authorized |-> FALSE,
+  principal |-> P1,
+  partition |-> Part1,
+  phase |-> "Start" ]
+/\ lastWrite = [kind |-> "Some", authorized |-> TRUE, principal |-> P1, record |-> R1]
+/\ permission = (P1 :> (KS1 :> {"Manage"}) @@ P2 :> (KS1 :> {}))
+/\ shardOwner = (Part1 :> N1)
+/\ writeState = (R1 :> "CommitLogged" @@ R2 :> "None")
+/\ migrateDst = (Part1 :> N1)
+/\ applied = {}
+/\ shardLocation = (Part1 :> {N1})
+/\ ackSet = (R1 :> {Rep1, Rep2} @@ R2 :> {})
+/\ lastRead = [ level |-> "One",
+  kind |-> "None",
+  authorized |-> FALSE,
+  result |-> {},
+  principal |-> P1,
+  keyspace |-> KS1,
+  executed |-> FALSE ]
+/\ shardData = (Part1 :> {})
+/\ wal = {R1}
+/\ readResult = {}
+/\ migrateSrc = (Part1 :> N1)
+
+State 5: <DoRead line 66, col 5 to line 67, col 29 of module CIntegrated>
+/\ migrateState = (Part1 :> "Stable")
+/\ replicaHas = (Rep1 :> {R1} @@ Rep2 :> {R1} @@ Rep3 :> {})
+/\ copiedData = (Part1 :> {})
+/\ lastMigrate = [ src |-> N1,
+  dst |-> N1,
+  kind |-> "None",
+  authorized |-> FALSE,
+  principal |-> P1,
+  partition |-> Part1,
+  phase |-> "Start" ]
+/\ lastWrite = [kind |-> "Some", authorized |-> TRUE, principal |-> P1, record |-> R1]
+/\ permission = (P1 :> (KS1 :> {"Manage"}) @@ P2 :> (KS1 :> {}))
+/\ shardOwner = (Part1 :> N1)
+/\ writeState = (R1 :> "CommitLogged" @@ R2 :> "None")
+/\ migrateDst = (Part1 :> N1)
+/\ applied = {}
+/\ shardLocation = (Part1 :> {N1})
+/\ ackSet = (R1 :> {Rep1, Rep2} @@ R2 :> {})
+/\ lastRead = [ level |-> "One",
+  kind |-> "Some",
+  authorized |-> TRUE,
+  result |-> {},
+  principal |-> P1,
+  keyspace |-> KS1,
+  executed |-> TRUE ]
+/\ shardData = (Part1 :> {})
+/\ wal = {R1}
+/\ readResult = {}
+/\ migrateSrc = (Part1 :> N1)
+
+State 6: <DoCommitWrite line 38, col 5 to line 39, col 53 of module CIntegrated>
+/\ migrateState = (Part1 :> "Stable")
+/\ replicaHas = (Rep1 :> {R1} @@ Rep2 :> {R1} @@ Rep3 :> {})
+/\ copiedData = (Part1 :> {})
+/\ lastMigrate = [ src |-> N1,
+  dst |-> N1,
+  kind |-> "None",
+  authorized |-> FALSE,
+  principal |-> P1,
+  partition |-> Part1,
+  phase |-> "Start" ]
+/\ lastWrite = [kind |-> "Some", authorized |-> TRUE, principal |-> P1, record |-> R1]
+/\ permission = (P1 :> (KS1 :> {"Manage"}) @@ P2 :> (KS1 :> {}))
+/\ shardOwner = (Part1 :> N1)
+/\ writeState = (R1 :> "Applied" @@ R2 :> "None")
+/\ migrateDst = (Part1 :> N1)
+/\ applied = {R1}
+/\ shardLocation = (Part1 :> {N1})
+/\ ackSet = (R1 :> {Rep1, Rep2} @@ R2 :> {})
+/\ lastRead = [ level |-> "One",
+  kind |-> "Some",
+  authorized |-> TRUE,
+  result |-> {},
+  principal |-> P1,
+  keyspace |-> KS1,
+  executed |-> TRUE ]
+/\ shardData = (Part1 :> {R1})
+/\ wal = {R1}
+/\ readResult = {}
+/\ migrateSrc = (Part1 :> N1)
+
+340917 states generated, 26254 distinct states found, 20341 states left on queue.
+The depth of the complete state graph search is 6.
+The average outdegree of the complete state graph is 4 (minimum is 0, the maximum 17 and the 95th percentile is 14).
+Finished in 03s at (2026-08-04 22:50:15)
+

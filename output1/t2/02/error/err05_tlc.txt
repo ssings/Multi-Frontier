@@ -1,0 +1,40 @@
+time=2026-08-04T19:25:37+08:00
+stage=tlc
+model=deepseek-v4-pro
+error_index=5
+
+===== DETAILS =====
+===== COMMAND =====
+java -Xmx2g -cp D:\python\formalization\docs\tla2tools.jar tlc2.TLC -workers 1 -config D:\python\formalization\output1\Qdrant.cfg QIntegrated.tla
+===== RETURN CODE: 151; TIMED OUT: False =====
+TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
+Running breadth-first search Model-Checking with fp 83 and seed 2990374877644461866 with 1 worker on 8 cores with 1820MB heap and 64MB offheap memory (Windows 10 10.0 amd64, Oracle Corporation 1.8.0_131 x86_64, MSBDiskFPSet, DiskStateQueue).
+Parsing file D:\python\formalization\output1\t2\02\Qdrant\QIntegrated.tla
+Parsing file D:\python\formalization\output1\t2\02\Qdrant\QFrontierInterface.tla
+Parsing file D:\python\formalization\output1\t2\02\Qdrant\QCfgHelpers.tla
+Parsing file D:\python\formalization\output1\t2\02\Qdrant\QSearch.tla
+Parsing file D:\python\formalization\output1\t2\02\Qdrant\QMigrate.tla
+Parsing file D:\python\formalization\output1\t2\02\Qdrant\QReplica.tla
+Parsing file D:\python\formalization\output1\t2\02\Qdrant\QWrite.tla
+Parsing file D:\python\formalization\output1\t2\02\Qdrant\QAuth.tla
+Parsing file D:\python\formalization\output1\t2\02\Qdrant\QCore.tla
+Parsing file C:\Users\27\AppData\Local\Temp\Naturals.tla
+Parsing file C:\Users\27\AppData\Local\Temp\FiniteSets.tla
+Parsing file C:\Users\27\AppData\Local\Temp\Sequences.tla
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module QCore
+Semantic processing of module QAuth
+Semantic processing of module QWrite
+Semantic processing of module QReplica
+Semantic processing of module QMigrate
+Semantic processing of module QSearch
+Semantic processing of module QFrontierInterface
+Semantic processing of module QCfgHelpers
+Semantic processing of module QIntegrated
+Starting... (2026-08-04 19:25:37)
+Error: The invariant AuthSafety specified in the configuration file
+is not defined in the specification.
+Finished in 00s at (2026-08-04 19:25:37)
+

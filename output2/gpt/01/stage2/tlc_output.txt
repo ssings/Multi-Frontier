@@ -1,0 +1,20 @@
+TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
+Running breadth-first search Model-Checking with fp 94 and seed -782512236378687177 with 1 worker on 8 cores with 1820MB heap and 64MB offheap memory (Windows 10 10.0 amd64, Oracle Corporation 1.8.0_131 x86_64, MSBDiskFPSet, DiskStateQueue).
+Parsing file D:\python\formalization\output2\gpt\01\stage2\Cassandra\Cassandra.tla
+Parsing file D:\python\formalization\output2\gpt\01\stage2\Cassandra\CassandraCfgSupport.tla
+Parsing file D:\python\formalization\output2\gpt\01\stage2\Cassandra\CassandraFrontier.tla
+Parsing file D:\python\formalization\output2\gpt\01\stage2\Cassandra\CCore.tla
+Parsing file C:\Users\27\AppData\Local\Temp\Naturals.tla
+Parsing file C:\Users\27\AppData\Local\Temp\FiniteSets.tla
+Parsing file C:\Users\27\AppData\Local\Temp\Sequences.tla
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module CCore
+Semantic processing of module CassandraFrontier
+Semantic processing of module CassandraCfgSupport
+Semantic processing of module Cassandra
+Starting... (2026-08-09 18:20:57)
+Computing initial states...
+Finished computing initial states: 1 distinct state generated at 2026-08-09 18:20:57.
+Progress(4) at 2026-08-09 18:21:00: 84,876 states generated (84,876 s/min), 24,713 distinct states found (24,713 ds/min), 24,123 states left on queue.

@@ -1,0 +1,2137 @@
+from __future__ import annotations
+
+import hashlib
+import os
+import re
+import subprocess
+import sys
+import time
+from datetime import datetime
+from pathlib import Path
+from typing import Dict, List, Sequence, Set, Tuple
+
+from openai import OpenAI
+
+# ============================== GPT / OpenAI fixed configuration ==============================
+# This script is only for Stage 2 of the Cassandra GPT experiment: TLA+/cfg generation and iterative repair.
+#
+# Before use, please change the placeholder values below to your accurate GPT API model ID,
+# or set the environment variable OPENAI_MODEL.
+# The API Key is always read from OPENAI_API_KEY.
+MODEL = os.getenv(
+    "OPENAI_MODEL",
+    "gpt-5.6-terra",
+).strip()
+
+PROVIDER = "openai"
+MODEL_FAMILY = "gpt"
+BASE_URL = os.getenv(
+    "OPENAI_BASE_URL",
+    "https://api.openai.com/v1",
+).strip()
+API_KEY_ENV = "OPENAI_API_KEY"
+REASONING_EFFORT = os.getenv(
+    "OPENAI_REASONING_EFFORT",
+    "high",
+).strip()
+
+API_TIMEOUT_SECONDS = int(os.getenv("FORMAL_API_TIMEOUT", "900"))
+MAX_OUTPUT_TOKENS = int(os.getenv("FORMAL_MAX_OUTPUT_TOKENS", "50000"))
+API_RETRIES = int(os.getenv("FORMAL_API_RETRIES", "3"))
+SMOKE_SECONDS = int(os.getenv("TLC_SMOKE_SECONDS", "60"))
+SANY_TIMEOUT_SECONDS = int(os.getenv("SANY_TIMEOUT_SECONDS", "180"))
+JAVA_BIN = os.getenv("JAVA_BIN", "java")
+JAVA_HEAP = os.getenv("TLC_JAVA_HEAP", "2g")
+TLC_WORKERS = os.getenv("TLC_WORKERS", "1")
+MAX_REPAIR_ROUNDS = int(os.getenv("CASSANDRA_MAX_REPAIRS", "20"))
+MAX_REPAIR_FILES = int(os.getenv("CASSANDRA_MAX_REPAIR_FILES", "5"))
+MAX_ERROR_PROMPT_CHARS = int(os.getenv("CASSANDRA_MAX_ERROR_PROMPT_CHARS", "45000"))
+MAX_BUNDLE_CHARS = int(os.getenv("CASSANDRA_MAX_BUNDLE_CHARS", "180000"))
+
+CFG_FILE_NAME = "Cassandra.cfg"
+
+MILVUS_ORDER = [
+    "MCore.tla",
+    "MAuth.tla",
+    "MWrite.tla",
+    "MSync.tla",
+    "MMigrate.tla",
+    "MQuery.tla",
+    "MFrontierInterface.tla",
+    "MIntegrated.tla",
+]
+
+# Only used to identify the TLA+ standard library; it will not restrict business module names generated autonomously by the model.
+STANDARD_MODULES: Set[str] = {
+    "Bags",
+    "FiniteSets",
+    "Integers",
+    "IOUtils",
+    "Json",
+    "Naturals",
+    "Randomization",
+    "RealTime",
+    "Reals",
+    "Sequences",
+    "TLC",
+    "TLCExt",
+    "Toolbox",
+    "Apalache",
+    "Variants",
+    "Functions",
+    "Relations",
+    "CommunityModules",
+    "Strings",
+}
+
+TLC_ERROR_PATTERNS = [
+    r"Invariant .* is violated",
+    r"The behavior up to this point is",
+    r"The following behavior constitutes a counter-example",
+    r"Temporal properties were violated",
+    r"Deadlock reached",
+    r"Parsing or semantic analysis failed",
+    r"Semantic errors?",
+    r"Successor state is not completely specified",
+    r"TLC threw an unexpected exception",
+    r"java\.lang\.(?:OutOfMemoryError|StackOverflowError)",
+    r"Java ran out of memory",
+    r"Error: TLC",
+]
+
+CFG_ERROR_PATTERNS = [
+    r"ConfigFileException",
+    r"Error while parsing.*config",
+    r"configuration file.*error",
+    r"Expecting = or <-",
+    r"The configuration file did not specify",
+    r"was not assigned a value by the configuration file",
+    r"Unknown operator.*configuration",
+]
+
+TLC_START_MARKERS = [
+    "Running breadth-first search Model-Checking",
+    "Computing initial states",
+    "Finished computing initial states",
+    "Progress(",
+    "states generated",
+    "Model checking completed",
+]
+
+FIXED_REPAIR_CONTRACT = r"""
+1. Incremental repairs must be made on the current file with minimal scope, and the entire model must not be rewritten without reason.
+2. Each round may modify, add, or delete at most the specified number of files.
+3. Modified files must return their complete content; files not returned remain unchanged.
+4. Valid .tla files may be modified or added, and Cassandra.cfg may also be modified.
+5. Use the DELETE FILE marker when deleting obsolete modules.
+6. Safety properties must not be deleted, commented out, renamed, or weakened to bypass the current error.
+7. Critical invariants must not be defined as TRUE, and Next or main actions must not be defined as FALSE.
+8. Each action must fully specify the next-state; unchanged variables must be explicitly UNCHANGED.
+9. Cassandra.cfg must be consistent with the current module, constants, entry operator, and invariant.
+10. This round only fixes the current errors reported by file structure, cfg, SANY, or TLC;
+    The hard check is evaluated only after the loop ends and is not used as repair feedback.
+11. Output only file markers; do not output explanations or Markdown code fences.
+""".strip()
+
+
+def find_project_root() -> Path:
+    start = Path(__file__).resolve().parent
+    for candidate in [start, *start.parents]:
+        if (
+            (candidate / "docs").is_dir()
+            and (candidate / "milvus").is_dir()
+            and (candidate / "output1").is_dir()
+            and (candidate / "output2").is_dir()
+        ):
+            return candidate
+    raise FileNotFoundError(
+        "Unable to locate the project root directory. Please ensure that docs, milvus, output1, and output2 all exist."
+    )
+
+
+ROOT = find_project_root()
+DOCS_DIR = ROOT / "docs"
+MILVUS_DIR = ROOT / "milvus"
+OUTPUT1_DIR = ROOT / "output1"
+OUTPUT2_DIR = ROOT / "output2"
+FAMILY_DIR = OUTPUT2_DIR / "gpt"
+MODEL_DIR = FAMILY_DIR
+
+TLA2TOOLS_JAR = DOCS_DIR / "tla2tools.jar"
+FRONTIER_PATH = DOCS_DIR / "Frontier_Method.md"
+QDRANT_SPEC_CANDIDATES = [
+    DOCS_DIR / "Qdrant_Specification.md",
+    OUTPUT1_DIR / "Qdrant_Specification.md",
+]
+QDRANT_CFG_PATH = OUTPUT1_DIR / "Qdrant.cfg"
+QDRANT_HELPER_PATH = OUTPUT1_DIR / "QCfgHelpers.tla"
+RULES_PATH = OUTPUT2_DIR / "TLA_Code_Error_Rules.md"
+
+RUN_DIR = FAMILY_DIR / "__pending__" / "stage2"
+CASSANDRA_DIR = RUN_DIR / "Cassandra"
+RESULT_PATH = RUN_DIR / "result.txt"
+HARD_CHECK_LOG_PATH = RUN_DIR / "hard_check_report.txt"
+TLC_LOG_PATH = RUN_DIR / (
+    "tlc_output_latest.txt"
+)
+STAGE1_SPEC_PATH = FAMILY_DIR / "__pending__" / "stage1" / "Cassandra specification.md"
+STAGE1_DOCS_PATH = FAMILY_DIR / "__pending__" / "stage1" / "cassandra_official_docs.md"
+ERROR_DIR = RUN_DIR / "error"
+
+
+class PipelineError(RuntimeError):
+    pass
+
+
+def now_text() -> str:
+    return datetime.now().astimezone().isoformat(timespec="seconds")
+
+
+def read_text(path: Path) -> str:
+    try:
+        return path.read_text(encoding="utf-8-sig")
+    except UnicodeDecodeError:
+        return path.read_text(encoding="gb18030")
+
+
+def write_text(path: Path, text: str) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(text, encoding="utf-8", newline="\n")
+
+
+def sha256_file(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as stream:
+        for chunk in iter(lambda: stream.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def decode_process_output(data: bytes | None) -> str:
+    if not data:
+        return ""
+    for encoding in ("utf-8", "gb18030", sys.getdefaultencoding()):
+        try:
+            return data.decode(encoding)
+        except UnicodeDecodeError:
+            continue
+    return data.decode("utf-8", errors="replace")
+
+
+def choose_existing(paths: Sequence[Path]) -> Path:
+    for path in paths:
+        if path.is_file():
+            return path
+    raise FileNotFoundError(
+        "The required reference files were not found; checked:\n" + "\n".join(str(p) for p in paths)
+    )
+
+
+def parse_key_value_file(path: Path) -> Dict[str, str]:
+    values: Dict[str, str] = {}
+    for line in read_text(path).splitlines():
+        if "=" not in line:
+            continue
+        key, value = line.split("=", 1)
+        values[key.strip()] = value.strip()
+    return values
+
+
+def find_pending_stage1_run() -> Tuple[Path, int, Dict[str, str]]:
+    """
+    Select the earliest number in output2/gpt where stage1 has passed but stage2 has not yet been generated.
+    """
+    FAMILY_DIR.mkdir(parents=True, exist_ok=True)
+    candidates: List[Tuple[Path, int, Dict[str, str]]] = []
+
+    for experiment_dir in sorted(
+        (
+            path for path in FAMILY_DIR.iterdir()
+            if path.is_dir() and re.fullmatch(r"\d{2,}", path.name)
+        ),
+        key=lambda path: int(path.name),
+    ):
+        repeat_index = int(experiment_dir.name)
+        stage1_dir = experiment_dir / "stage1"
+        stage1_result = stage1_dir / "result.txt"
+        stage1_spec = stage1_dir / "Cassandra specification.md"
+        stage1_docs = stage1_dir / "cassandra_official_docs.md"
+        if not all(
+            path.is_file()
+            for path in (stage1_result, stage1_spec, stage1_docs)
+        ):
+            continue
+
+        values = parse_key_value_file(stage1_result)
+        if (
+            values.get("docs_result") != "pass"
+            or values.get("spec_result") != "pass"
+        ):
+            continue
+
+        # Different models in the same series share directories, but stage2 only reads the stage1 generated by the current exact
+        # MODEL, to avoid mixing different model types such as pro/flash into one chain.
+        if values.get("model") != MODEL:
+            continue
+        if values.get("model_family", MODEL_FAMILY) != MODEL_FAMILY:
+            continue
+
+        stage2_dir = experiment_dir / "stage2"
+        if not stage2_dir.exists():
+            candidates.append((experiment_dir, repeat_index, values))
+            continue
+        if not (stage2_dir / "result.txt").is_file():
+            raise FileExistsError(
+                f"stage2 directory already exists but result.txt is missing: {stage2_dir}."
+                "To avoid overwriting, please manually handle this directory first."
+            )
+
+    if not candidates:
+        raise FileNotFoundError(
+            f"No stage1 generated by the current model {MODEL} under {FAMILY_DIR} was found,"
+            "and usable by stage2."
+            "Please first run 01_generate_cassandra_plan_gpt.py with the same OPENAI_MODEL."
+        )
+    return candidates[0]
+
+
+def prepare_run() -> Tuple[Path, Path, Dict[str, str], int]:
+    global MODEL_DIR, RUN_DIR, CASSANDRA_DIR, ERROR_DIR
+    global RESULT_PATH, HARD_CHECK_LOG_PATH, TLC_LOG_PATH
+    global STAGE1_SPEC_PATH, STAGE1_DOCS_PATH
+
+    experiment_dir, repeat_index, stage1_values = (
+        find_pending_stage1_run()
+    )
+    stage1_run = experiment_dir / "stage1"
+    stage2_run = experiment_dir / "stage2"
+    stage2_run.mkdir(parents=False, exist_ok=False)
+
+    MODEL_DIR = FAMILY_DIR
+    RUN_DIR = stage2_run
+    CASSANDRA_DIR = RUN_DIR / "Cassandra"
+    CASSANDRA_DIR.mkdir(parents=True, exist_ok=False)
+    RESULT_PATH = RUN_DIR / "result.txt"
+    HARD_CHECK_LOG_PATH = RUN_DIR / "hard_check_report.txt"
+    TLC_LOG_PATH = RUN_DIR / "tlc_output.txt"
+    ERROR_DIR = RUN_DIR / "error"
+    STAGE1_SPEC_PATH = stage1_run / "Cassandra specification.md"
+    STAGE1_DOCS_PATH = stage1_run / "cassandra_official_docs.md"
+    return RUN_DIR, stage1_run, stage1_values, repeat_index
+
+
+def validate_inputs() -> Tuple[Path, Path | None]:
+    required = [TLA2TOOLS_JAR, FRONTIER_PATH, QDRANT_CFG_PATH]
+    required.extend(MILVUS_DIR / name for name in MILVUS_ORDER)
+    required.append(RULES_PATH)
+
+    missing = [str(path) for path in required if not path.is_file()]
+    if missing:
+        raise FileNotFoundError("Missing input files:\n" + "\n".join(missing))
+    if (
+        not MODEL
+        or MODEL == "REPLACE_WITH_YOUR_GPT_MODEL_ID"
+    ):
+        raise EnvironmentError(
+            "Please first set an accurate OPENAI_MODEL, or modify MODEL at the top of the script."
+        )
+    if not BASE_URL:
+        raise EnvironmentError("OPENAI_BASE_URL / BASE_URL cannot be empty.")
+    if not os.getenv(API_KEY_ENV):
+        raise EnvironmentError(
+            f"API Key environment variable not set: {API_KEY_ENV}."
+        )
+    qdrant_spec = choose_existing(QDRANT_SPEC_CANDIDATES)
+    qdrant_helper = (
+        QDRANT_HELPER_PATH if QDRANT_HELPER_PATH.is_file() else None
+    )
+    return qdrant_spec, qdrant_helper
+
+
+def build_milvus_bundle() -> str:
+    sections: List[str] = []
+    for name in MILVUS_ORDER:
+        path = MILVUS_DIR / name
+        sections.append(
+            f"\n===== MILVUS FILE: {name} =====\n"
+            f"{read_text(path)}\n"
+            "===== END MILVUS FILE ====="
+        )
+    return "\n".join(sections)
+
+
+def build_reference_bundle(
+    qdrant_spec: Path,
+    qdrant_helper: Path | None,
+) -> str:
+    helper_text = (
+        read_text(qdrant_helper)
+        if qdrant_helper is not None
+        else "QCfgHelpers.tla not provided."
+    )
+    return f"""
+================ Frontier common methods.md ================
+{read_text(FRONTIER_PATH)}
+
+================ Cassandra specification.md ================
+{read_text(STAGE1_SPEC_PATH)}
+
+================ Qdrant specification.md (only as a reference for cross-database specification structure) ================
+{read_text(qdrant_spec)}
+
+================ Qdrant.cfg (only as a reference for TLC configuration format) ================
+{read_text(QDRANT_CFG_PATH)}
+
+================ QCfgHelpers.tla (optional configuration syntax reference) ================
+{helper_text}
+
+================ Milvus TLA+ reference code ================
+{build_milvus_bundle()}
+""".strip()
+
+
+
+def create_client() -> OpenAI:
+    return OpenAI(
+        api_key=os.environ[API_KEY_ENV],
+        base_url=BASE_URL,
+        timeout=API_TIMEOUT_SECONDS,
+        max_retries=0,
+    )
+
+
+def _usage_from_response(response) -> Dict[str, int]:
+    usage = getattr(response, "usage", None)
+    return {
+        "prompt_tokens": int(getattr(usage, "input_tokens", 0) or 0),
+        "completion_tokens": int(getattr(usage, "output_tokens", 0) or 0),
+        "total_tokens": int(getattr(usage, "total_tokens", 0) or 0),
+    }
+
+
+def call_model(
+    client: OpenAI,
+    prompt: str,
+    system_prompt: str,
+) -> Tuple[str, Dict[str, int]]:
+    last_error: Exception | None = None
+
+    for attempt in range(1, API_RETRIES + 1):
+        try:
+            response = client.responses.create(
+                model=MODEL,
+                instructions=system_prompt,
+                input=prompt,
+                max_output_tokens=MAX_OUTPUT_TOKENS,
+                reasoning={"effort": REASONING_EFFORT},
+                store=False,
+            )
+            content = getattr(response, "output_text", "") or ""
+            usage_dict = _usage_from_response(response)
+
+            if not content.strip():
+                raise PipelineError(
+                    f"Model {MODEL_FAMILY}/{MODEL} returned empty content."
+                )
+            return content, usage_dict
+
+        except Exception as exc:
+            last_error = exc
+            print(
+                f"API call failed ({attempt}/{API_RETRIES}):"
+                f"{type(exc).__name__}: {exc}"
+            )
+
+            status_code = getattr(exc, "status_code", None)
+            if status_code is not None and 400 <= int(status_code) < 500:
+                break
+            if attempt >= API_RETRIES:
+                break
+
+            wait_seconds = min(30, 2 ** attempt)
+            print(f"Retrying after waiting {wait_seconds} seconds.")
+            time.sleep(wait_seconds)
+
+    if last_error is not None:
+        raise PipelineError(
+            f"Model {MODEL_FAMILY}/{MODEL} API call ultimately failed:"
+            f"{type(last_error).__name__}: {last_error}"
+        )
+    raise PipelineError(
+        f"Model {MODEL_FAMILY}/{MODEL} API call ultimately failed."
+    )
+
+
+def add_usage(result: Dict[str, object], usage: Dict[str, int]) -> None:
+    result["api_calls"] = int(result["api_calls"]) + 1
+    for key in ("prompt_tokens", "completion_tokens", "total_tokens"):
+        result[key] = int(result[key]) + int(usage.get(key, 0))
+
+
+def build_tla_prompt(reference_bundle: str) -> str:
+    rule_section = (
+        "\n================ TLA generation error-prone rules.md ================\n"
+        + read_text(RULES_PATH)
+    )
+
+    return f"""
+Please autonomously design and generate a Frontier-based TLA+ model for Cassandra based on the Cassandra specification.
+
+[Autonomous design scope]
+- Autonomously determine the number of .tla files.
+- Autonomously determine module names.
+- Autonomously determine module responsibility division and EXTENDS/INSTANCE dependency structure.
+- A single module or multiple modules may be used.
+- A configuration helper module may be added autonomously in this generation.
+- Do not preset or copy Qdrant's fixed module chain.
+
+【Modeling goals that must be satisfied】
+1. Cover authorization and unauthorized rejection.
+2. Cover write, commit log, apply/commit, and replica confirmation.
+3. Cover replica propagation, synchronization, or eventual convergence.
+4. Cover representative consistency read.
+5. Cover Cassandra data range streaming, bootstrap,
+   decommission, move/replace, and other migration abstractions.
+6. Define Frontier, and let it participate in read visibility or safety properties.
+7. Define at least one set of type properties and safety properties checkable by TLC.
+8. There must be an integration entry module so that cfg can pass through SPECIFICATION,
+   or through INIT/NEXT, uniquely determining the TLC entry.
+9. The integration entry must be able to reach the main business actions, and cannot define only an empty model.
+10. All state variables must be assigned in Init; each action must fully specify the next-state.
+11. Do not bypass validation using always-true properties, fixed empty results, or permanently non-executable actions.
+
+【Only TLA+ files are output this time】
+- Output one or more .tla files.
+- Do not output Cassandra.cfg; the configuration will be generated in the next call based on the actual code.
+- File names must match MODULE names.
+- All files must be complete and end with ====.
+- Do not output explanations or Markdown code fences.
+
+[Strict file format]
+===== FILE: any valid name.tla =====
+<complete TLA+ content>
+===== END FILE =====
+
+{reference_bundle}
+{rule_section}
+""".strip()
+
+
+def discover_tla_files() -> List[Path]:
+    return sorted(
+        [
+            path
+            for path in CASSANDRA_DIR.glob("*.tla")
+            if path.is_file()
+        ],
+        key=lambda path: path.name.lower(),
+    )
+
+
+def cfg_path() -> Path:
+    return CASSANDRA_DIR / CFG_FILE_NAME
+
+
+def current_tla_bundle() -> str:
+    sections: List[str] = []
+    for path in discover_tla_files():
+        sections.append(
+            f"===== FILE: {path.name} =====\n"
+            f"{read_text(path)}\n"
+            "===== END FILE ====="
+        )
+    return "\n\n".join(sections)
+
+
+def build_cfg_prompt(reference_bundle: str) -> str:
+    return f"""
+Please autonomously design the TLC configuration based on the Cassandra TLA+ module already generated below.
+
+[Required output]
+- Cassandra.cfg: there must be exactly this one cfg file.
+
+[Allowed output]
+- one or more newly added .tla configuration helper modules to complete cfg assignments;
+- existing .tla modules that must be modified due to integration of configuration helper modules;
+- when no helper modules are needed, output only Cassandra.cfg.
+
+[Configuration requirements]
+1. Cassandra.cfg must use SPECIFICATION, or use INIT/NEXT together;
+   Do not mix the two entry methods.
+2. The cfg must uniquely determine one actually generated TLA+ entry module.
+3. All constants, entry operators, invariants, and `<- HelperOperator` in the cfg
+   must be visible in the entry module.
+4. The configuration scale should at least include two principals, three nodes, one data range,
+   three replicas and two data items, and keep the one-minute smoke test runnable.
+5. When complex function constants are needed, you may add helper modules with arbitrary names,
+   but the entry module must also be able to see that helper.
+6. Do not copy Qdrant's proprietary names such as P1, C1, PT1, QCfgHelpers, etc.
+7. The cfg must conform to TLC configuration file syntax.
+
+[Strict file format]
+===== FILE: Cassandra.cfg =====
+<complete cfg content>
+===== END FILE =====
+
+Optional TLA+ files continue to use:
+===== FILE: any_valid_name.tla =====
+<full content>
+===== END FILE =====
+
+Do not output explanations or Markdown code fences.
+
+================ Current Cassandra TLA+ model ================
+{current_tla_bundle()}
+
+================ Reference materials ================
+{reference_bundle}
+""".strip()
+
+
+def strip_outer_fence(text: str, suffix: str) -> str:
+    value = text.strip()
+    if suffix == ".tla":
+        value = re.sub(
+            r"^```(?:tla\+?|text)?\s*\n?",
+            "",
+            value,
+            flags=re.I,
+        )
+    else:
+        value = re.sub(
+            r"^```(?:cfg|text)?\s*\n?",
+            "",
+            value,
+            flags=re.I,
+        )
+    value = re.sub(r"\n?```\s*$", "", value)
+    return value.strip() + "\n"
+
+
+def extract_generated_files(
+    response_text: str,
+    *,
+    allow_cfg: bool,
+) -> Tuple[Dict[str, str], List[str], List[str]]:
+    """
+    Returns:
+        files       extracted .tla and Cassandra.cfg;
+        unexpected  forbidden files;
+        duplicates  duplicate output of files with the same name.
+    """
+    files: Dict[str, str] = {}
+    unexpected: List[str] = []
+    duplicates: List[str] = []
+
+    marker = re.compile(
+        r"(?im)^\s*(?:={3,}\s*)?FILE:\s*"
+        r"([A-Za-z_][A-Za-z0-9_-]*\.(?:tla|cfg))"
+        r"\s*(?:={3,})?\s*$"
+    )
+    matches = list(marker.finditer(response_text))
+
+    for index, match in enumerate(matches):
+        name = match.group(1)
+        start = match.end()
+        end = (
+            matches[index + 1].start()
+            if index + 1 < len(matches)
+            else len(response_text)
+        )
+        block = response_text[start:end]
+        block = re.split(
+            r"(?im)^\s*(?:={3,}\s*)?END FILE"
+            r"(?:\s*:\s*[^\n]+)?\s*(?:={3,})?\s*$",
+            block,
+            maxsplit=1,
+        )[0]
+
+        suffix = Path(name).suffix.lower()
+        allowed = suffix == ".tla" or (
+            allow_cfg and name == CFG_FILE_NAME
+        )
+        if not allowed:
+            unexpected.append(name)
+            continue
+        if name in files:
+            duplicates.append(name)
+        files[name] = strip_outer_fence(block, suffix)
+
+    # Compatible with models that directly output standard TLA+ modules without FILE markers.
+    if not files and not allow_cfg:
+        module_pattern = re.compile(
+            r"(?ms)^-{4,}\s*MODULE\s+"
+            r"([A-Za-z_][A-Za-z0-9_]*)\s*-{4,}\s*\n"
+            r".*?^={4,}\s*$"
+        )
+        for match in module_pattern.finditer(response_text):
+            name = f"{match.group(1)}.tla"
+            if name in files:
+                duplicates.append(name)
+            files[name] = match.group(0).strip() + "\n"
+
+    return files, sorted(set(unexpected)), sorted(set(duplicates))
+
+
+def extract_delete_requests(response_text: str) -> List[str]:
+    return sorted(
+        set(
+            re.findall(
+                r"(?im)^\s*(?:={3,}\s*)?DELETE FILE:\s*"
+                r"([A-Za-z_][A-Za-z0-9_-]*\.tla)"
+                r"\s*(?:={3,})?\s*$",
+                response_text,
+            )
+        )
+    )
+
+
+def save_generated_files(files: Dict[str, str]) -> None:
+    for name, content in files.items():
+        write_text(CASSANDRA_DIR / name, content)
+
+
+def remove_tla_comments(text: str) -> str:
+    text = re.sub(r"\(\*.*?\*\)", " ", text, flags=re.S)
+    text = re.sub(r"(?m)^\s*\\\*.*$", " ", text)
+    return text
+
+
+def module_name(text: str) -> str | None:
+    match = re.search(
+        r"-{4,}\s*MODULE\s+([A-Za-z_][A-Za-z0-9_]*)\s*-{4,}",
+        text,
+    )
+    return match.group(1) if match else None
+
+
+def defined_operators(text: str) -> Set[str]:
+    clean = remove_tla_comments(text)
+    return set(
+        re.findall(
+            r"(?m)^\s*([A-Za-z_][A-Za-z0-9_]*)"
+            r"(?:\s*\([^=\n]*\))?\s*==",
+            clean,
+        )
+    )
+
+
+def declared_constants(text: str) -> Set[str]:
+    clean = remove_tla_comments(text)
+    names: Set[str] = set()
+    pattern = re.compile(
+        r"(?ms)^\s*CONSTANTS?\s+(.+?)"
+        r"(?=^\s*(?:VARIABLES?|ASSUME|THEOREM|"
+        r"[A-Za-z_][A-Za-z0-9_]*(?:\([^)]*\))?\s*==)|\Z)"
+    )
+    for match in pattern.finditer(clean):
+        block = match.group(1)
+        block = re.sub(r"![A-Za-z_][A-Za-z0-9_]*", "", block)
+        names.update(
+            re.findall(r"[A-Za-z_][A-Za-z0-9_]*", block)
+        )
+    return names
+
+
+def module_dependencies(text: str) -> Set[str]:
+    clean = remove_tla_comments(text)
+    dependencies: Set[str] = set()
+
+    extends_pattern = re.compile(
+        r"(?ms)^\s*EXTENDS\s+(.+?)"
+        r"(?=^\s*(?:CONSTANTS?|VARIABLES?|ASSUME|THEOREM|"
+        r"[A-Za-z_][A-Za-z0-9_]*(?:\([^)]*\))?\s*==)|\Z)"
+    )
+    for match in extends_pattern.finditer(clean):
+        dependencies.update(
+            re.findall(
+                r"[A-Za-z_][A-Za-z0-9_]*",
+                match.group(1),
+            )
+        )
+
+    dependencies.update(
+        re.findall(
+            r"\bINSTANCE\s+([A-Za-z_][A-Za-z0-9_]*)",
+            clean,
+        )
+    )
+    return dependencies
+
+
+def analyze_modules() -> Tuple[
+    Dict[str, Path],
+    Dict[str, str],
+    Dict[str, Set[str]],
+    List[str],
+]:
+    """
+    Returns:
+        module_paths  MODULE name -> file path
+        module_texts  MODULE name -> file content
+        graph         MODULE name -> generated modules it depends on
+        errors        basic file and module errors
+    """
+    module_paths: Dict[str, Path] = {}
+    module_texts: Dict[str, str] = {}
+    raw_dependencies: Dict[str, Set[str]] = {}
+    errors: List[str] = []
+
+    tla_files = discover_tla_files()
+    if not tla_files:
+        return {}, {}, {}, ["No .tla files were generated"]
+
+    for path in tla_files:
+        text = read_text(path)
+        if not text.strip():
+            errors.append(f"{path.name} is empty")
+            continue
+        if "```" in text:
+            errors.append(f"{path.name} contains residual Markdown code fences")
+        if re.search(r"(?m)^\s*//", text):
+            errors.append(f"{path.name} uses // comments")
+        if not re.search(r"(?m)^={4,}\s*$", text):
+            errors.append(f"{path.name} does not end with ====")
+
+        actual_module = module_name(text)
+        if not actual_module:
+            errors.append(f"{path.name} is missing a valid MODULE declaration")
+            continue
+        if path.stem != actual_module:
+            errors.append(
+                f"{path.name} file name is inconsistent with MODULE {actual_module}"
+            )
+        if actual_module in module_paths:
+            errors.append(
+                f"MODULE {actual_module} appears simultaneously in "
+                f"{module_paths[actual_module].name} and {path.name}"
+            )
+            continue
+
+        module_paths[actual_module] = path
+        module_texts[actual_module] = text
+        raw_dependencies[actual_module] = module_dependencies(text)
+
+    generated_names = set(module_paths)
+    graph: Dict[str, Set[str]] = {}
+    for name in generated_names:
+        graph[name] = {
+            dep
+            for dep in raw_dependencies.get(name, set())
+            if dep in generated_names
+        }
+
+    return module_paths, module_texts, graph, errors
+
+
+def topological_module_order(
+    module_paths: Dict[str, Path],
+    graph: Dict[str, Set[str]],
+) -> Tuple[List[Path], List[str]]:
+    indegree = {
+        module: len(dependencies)
+        for module, dependencies in graph.items()
+    }
+    reverse: Dict[str, Set[str]] = {
+        module: set() for module in graph
+    }
+    for module, dependencies in graph.items():
+        for dependency in dependencies:
+            reverse.setdefault(dependency, set()).add(module)
+
+    ready = sorted(
+        [module for module, degree in indegree.items() if degree == 0]
+    )
+    order: List[str] = []
+
+    while ready:
+        module = ready.pop(0)
+        order.append(module)
+        for child in sorted(reverse.get(module, set())):
+            indegree[child] -= 1
+            if indegree[child] == 0:
+                ready.append(child)
+                ready.sort()
+
+    if len(order) != len(graph):
+        cycle_modules = sorted(
+            module for module, degree in indegree.items() if degree > 0
+        )
+        return [], [
+            "Generated modules have circular dependencies, involving: " + ", ".join(cycle_modules)
+        ]
+
+    return [module_paths[name] for name in order], []
+
+
+def dependency_closure(
+    module: str,
+    graph: Dict[str, Set[str]],
+) -> Set[str]:
+    closure: Set[str] = set()
+    stack = [module]
+    while stack:
+        current = stack.pop()
+        if current in closure:
+            continue
+        closure.add(current)
+        stack.extend(graph.get(current, set()))
+    return closure
+
+
+def visible_operators(
+    module: str,
+    module_texts: Dict[str, str],
+    graph: Dict[str, Set[str]],
+) -> Set[str]:
+    operators: Set[str] = set()
+    for visible_module in dependency_closure(module, graph):
+        operators.update(
+            defined_operators(module_texts.get(visible_module, ""))
+        )
+    return operators
+
+
+def visible_constants(
+    module: str,
+    module_texts: Dict[str, str],
+    graph: Dict[str, Set[str]],
+) -> Set[str]:
+    constants: Set[str] = set()
+    for visible_module in dependency_closure(module, graph):
+        constants.update(
+            declared_constants(module_texts.get(visible_module, ""))
+        )
+    return constants
+
+
+def cfg_directive_values(cfg: str, directive: str) -> List[str]:
+    lines = cfg.splitlines()
+    values: List[str] = []
+    active = False
+    stop_words = {
+        "SPECIFICATION",
+        "INIT",
+        "NEXT",
+        "CONSTANT",
+        "CONSTANTS",
+        "INVARIANT",
+        "INVARIANTS",
+        "PROPERTY",
+        "PROPERTIES",
+        "CONSTRAINT",
+        "ACTION_CONSTRAINT",
+        "CHECK_DEADLOCK",
+        "SYMMETRY",
+        "VIEW",
+        "ALIAS",
+        "POSTCONDITION",
+    }
+
+    directive_names = {directive.upper(), directive.upper() + "S"}
+    for raw in lines:
+        line = re.sub(r"\\\*.*$", "", raw).strip()
+        if not line:
+            continue
+
+        first = line.split()[0].upper()
+        if first in stop_words:
+            active = first in directive_names
+            if active:
+                tail = line[len(line.split()[0]):].strip()
+                if tail:
+                    values.extend(
+                        re.findall(
+                            r"[A-Za-z_][A-Za-z0-9_]*",
+                            tail,
+                        )
+                    )
+            continue
+
+        if active:
+            if re.search(r"(?:=|<-)", line):
+                break
+            values.extend(
+                re.findall(r"[A-Za-z_][A-Za-z0-9_]*", line)
+            )
+
+    return values
+
+
+def cfg_entry_requirements(
+    cfg: str,
+) -> Tuple[List[str], List[str]]:
+    errors: List[str] = []
+    required_ops: List[str] = []
+
+    spec_match = re.search(
+        r"(?mi)^\s*SPECIFICATION\s+"
+        r"([A-Za-z_][A-Za-z0-9_]*)",
+        cfg,
+    )
+    init_match = re.search(
+        r"(?mi)^\s*INIT\s+([A-Za-z_][A-Za-z0-9_]*)",
+        cfg,
+    )
+    next_match = re.search(
+        r"(?mi)^\s*NEXT\s+([A-Za-z_][A-Za-z0-9_]*)",
+        cfg,
+    )
+
+    if spec_match and (init_match or next_match):
+        errors.append(
+            "Cassandra.cfg uses SPECIFICATION and INIT/NEXT simultaneously"
+        )
+    elif spec_match:
+        required_ops = [spec_match.group(1)]
+    elif init_match and next_match:
+        required_ops = [
+            init_match.group(1),
+            next_match.group(1),
+        ]
+    else:
+        errors.append(
+            "Cassandra.cfg must use SPECIFICATION,"
+            "or provide INIT and NEXT simultaneously"
+        )
+
+    return required_ops, errors
+
+
+def choose_entry_module(
+    required_ops: Sequence[str],
+    module_texts: Dict[str, str],
+    graph: Dict[str, Set[str]],
+) -> Tuple[str | None, List[str]]:
+    """cfg must uniquely determine the entry module; heuristics such as closure size are no longer used to guess."""
+    if not required_ops:
+        return None, ["Unable to determine the entry operator from cfg"]
+
+    candidates = [
+        module
+        for module in module_texts
+        if set(required_ops).issubset(
+            visible_operators(module, module_texts, graph)
+        )
+    ]
+    if not candidates:
+        return None, [
+            "No generated module can simultaneously see the cfg entry operator: "
+            + ", ".join(required_ops)
+        ]
+    if len(candidates) == 1:
+        return candidates[0], []
+
+    direct_candidates = [
+        module
+        for module in candidates
+        if set(required_ops).issubset(
+            defined_operators(module_texts[module])
+        )
+    ]
+    if len(direct_candidates) == 1:
+        return direct_candidates[0], []
+
+    return None, [
+        "cfg entry is not unique; the following modules all see the entry operator: "
+        + ", ".join(sorted(candidates))
+    ]
+
+
+def cfg_precheck(
+    module_paths: Dict[str, Path],
+    module_texts: Dict[str, str],
+    graph: Dict[str, Set[str]],
+) -> Tuple[List[str], str | None]:
+    errors: List[str] = []
+    config_path = cfg_path()
+
+    cfg_files = sorted(CASSANDRA_DIR.glob("*.cfg"))
+    if not config_path.is_file():
+        errors.append("Missing Cassandra.cfg")
+    if len(cfg_files) != 1:
+        errors.append(
+            f"Exactly one cfg file must be generated; actual count is {len(cfg_files)}"
+        )
+    if errors:
+        return errors, None
+
+    cfg = read_text(config_path)
+    if not cfg.strip():
+        errors.append("Cassandra.cfg is empty")
+        return errors, None
+    if "```" in cfg:
+        errors.append("Cassandra.cfg contains residual Markdown code fences")
+    if re.search(
+        r"(?m)^\s*[A-Za-z_][A-Za-z0-9_]*\s*==",
+        cfg,
+    ):
+        errors.append(
+            "TLA+ definition operator == is used in Cassandra.cfg,"
+            "configuration assignments should use = or <-"
+        )
+    if re.search(r"\bLET\b|\bIN\b", cfg):
+        errors.append(
+            "LET/IN appears in Cassandra.cfg; complex expressions should be moved into TLA+ helper"
+        )
+
+    required_ops, entry_errors = cfg_entry_requirements(cfg)
+    errors.extend(entry_errors)
+
+    entry_module: str | None = None
+    if not entry_errors:
+        entry_module, choose_errors = choose_entry_module(
+            required_ops,
+            module_texts,
+            graph,
+        )
+        errors.extend(choose_errors)
+
+    if entry_module is not None:
+        visible_ops = visible_operators(
+            entry_module,
+            module_texts,
+            graph,
+        )
+        visible_consts = visible_constants(
+            entry_module,
+            module_texts,
+            graph,
+        )
+
+        invariants = cfg_directive_values(cfg, "INVARIANT")
+        if not invariants:
+            errors.append("Cassandra.cfg does not configure any INVARIANT")
+        for name in invariants:
+            if name not in visible_ops:
+                errors.append(
+                    f"INVARIANT {name} is not visible in entry module {entry_module}"
+                )
+
+        cfg_constant_names = set(
+            re.findall(
+                r"(?m)^\s*([A-Za-z_][A-Za-z0-9_]*)"
+                r"\s*(?:=|<-)\s*",
+                cfg,
+            )
+        )
+        for name in sorted(cfg_constant_names - visible_consts):
+            errors.append(
+                f"cfg assigns a constant that is not visible or undeclared in the entry module: {name}"
+            )
+
+        helper_refs = set(
+            re.findall(
+                r"<-\s*([A-Za-z_][A-Za-z0-9_]*)",
+                cfg,
+            )
+        )
+        for name in sorted(helper_refs - visible_ops):
+            errors.append(
+                f"helper operator referenced by cfg is not visible in the entry module: {name}"
+            )
+
+    if re.search(
+        r"\bQ(?:Core|Auth|Write|Replica|Migrate|Search|Integrated|CfgHelpers)\b",
+        cfg,
+    ):
+        errors.append("Cassandra.cfg contains residual Qdrant module or helper names")
+
+    return errors, entry_module
+
+
+def hard_check_errors(
+    module_texts: Dict[str, str],
+    graph: Dict[str, Set[str]],
+    entry_module: str | None,
+) -> List[str]:
+    """Only check deterministic structural, contamination, and degradation-prevention issues."""
+    errors: List[str] = []
+    clean_by_module = {
+        module: remove_tla_comments(text)
+        for module, text in module_texts.items()
+    }
+    all_code = "\n".join(clean_by_module.values())
+
+    unicode_tokens = [
+        "∈", "∀", "∃", "∧", "∨", "⊆", "≤", "≥", "≠", "→", "′"
+    ]
+    for module, code in clean_by_module.items():
+        found = [token for token in unicode_tokens if token in code]
+        if found:
+            errors.append(
+                f"{module}.tla contains forbidden Unicode TLA operators: "
+                + "".join(found)
+            )
+        if ":=" in code:
+            errors.append(f"{module}.tla uses pseudocode assignment :=")
+        if re.search(r"(?m)^\s*//", code):
+            errors.append(f"{module}.tla uses invalid // comments")
+        if re.search(
+            r"(?m)^\s*Next\s*==\s*(?:TRUE|FALSE)\s*$",
+            code,
+        ):
+            errors.append(f"{module}.tla degrades Next into a constant")
+        if re.search(
+            r"(?m)^\s*[A-Za-z_][A-Za-z0-9_]*"
+            r"(?:Safety|Invariant|TypeOK)"
+            r"(?:\s*\([^\n]*\))?\s*==\s*TRUE\s*$",
+            code,
+        ):
+            errors.append(
+                f"{module}.tla contains a tautologically true critical safety property or type invariant"
+            )
+
+    # Fully automated Cassandra generation must not leave Qdrant-specific modules or helpers.
+    if re.search(
+        r"\bQdrant\b|\bQCfgHelpers\b|\bQCore\b|"
+        r"\bQAuth\b|\bQWrite\b|\bQReplica\b|"
+        r"\bQMigrate\b|\bQSearch\b|\bQIntegrated\b",
+        all_code,
+    ):
+        errors.append("Qdrant-specific module or helper names remain in the Cassandra model")
+
+    # All generated modules must be reachable from the cfg entry module; otherwise they are dead files not connected to the model.
+    if entry_module is not None:
+        reachable = dependency_closure(entry_module, graph)
+        unreachable = sorted(set(module_texts) - reachable)
+        if unreachable:
+            errors.append(
+                f"Entry module {entry_module} cannot reach generated module:"
+                + ", ".join(unreachable)
+            )
+
+    return errors
+
+
+def write_hard_check_report(
+    tla_errors: List[str],
+    structure_errors: List[str],
+    cfg_errors: List[str],
+    hard_errors: List[str],
+    entry_module: str | None,
+    sany_order: Sequence[Path],
+) -> None:
+    lines = [
+        "Cassandra hard check report",
+        "",
+        f"discovered_tla_files={len(discover_tla_files())}",
+        f"entry_module={entry_module or 'unknown'}",
+        "sany_order="
+        + (
+            ",".join(path.name for path in sany_order)
+            if sany_order
+            else "not_available"
+        ),
+        "",
+    ]
+
+    groups = (
+        ("TLA file hard check", tla_errors),
+        ("Module dependency hard check", structure_errors),
+        ("cfg hard check", cfg_errors),
+        ("Anti-degradation and cross-database contamination check", hard_errors),
+    )
+    for title, errors in groups:
+        lines.append(f"[{title}]")
+        if errors:
+            for index, error in enumerate(errors, 1):
+                lines.append(f"{index}. {error}")
+        else:
+            lines.append("PASS")
+        lines.append("")
+
+    all_errors = tla_errors + structure_errors + cfg_errors + hard_errors
+    lines.append("overall=" + ("fail" if all_errors else "pass"))
+    lines.append(
+        "note=This report does not use keywords to determine authorization, write, read, migration, or Frontier semantics;"
+        "This content is confirmed by TLC coverage, reachability tests, and manual logic checks."
+    )
+    if all_errors:
+        write_text(HARD_CHECK_LOG_PATH, "\n".join(lines) + "\n")
+    elif HARD_CHECK_LOG_PATH.exists():
+        HARD_CHECK_LOG_PATH.unlink()
+
+
+def run_sany(order: Sequence[Path]) -> Tuple[bool, str]:
+    outputs: List[str] = []
+    for path in order:
+        command = [
+            JAVA_BIN,
+            "-cp",
+            str(TLA2TOOLS_JAR),
+            "tla2sany.SANY",
+            path.name,
+        ]
+        try:
+            completed = subprocess.run(
+                command,
+                cwd=CASSANDRA_DIR,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                timeout=SANY_TIMEOUT_SECONDS,
+                check=False,
+            )
+            output = decode_process_output(completed.stdout)
+        except subprocess.TimeoutExpired as exc:
+            output = (
+                decode_process_output(exc.stdout)
+                + decode_process_output(exc.stderr)
+            )
+            outputs.append(
+                f"===== MODULE: {path.name}; TIMEOUT =====\n{output}"
+            )
+            return False, "\n".join(outputs)
+
+        outputs.append(
+            f"===== MODULE: {path.name}; "
+            f"RETURN CODE: {completed.returncode} =====\n{output}"
+        )
+        if completed.returncode != 0:
+            return False, "\n".join(outputs)
+        if re.search(
+            r"\*\*\*(?:Parse|Semantic) Error|"
+            r"Parsing or semantic analysis failed",
+            output,
+            re.I,
+        ):
+            return False, "\n".join(outputs)
+
+    return True, "\n".join(outputs)
+
+
+def run_tlc_smoke(
+    entry_module: str,
+) -> Tuple[bool, bool, str, bool]:
+    command = [
+        JAVA_BIN,
+        f"-Xmx{JAVA_HEAP}",
+        "-cp",
+        str(TLA2TOOLS_JAR),
+        "tlc2.TLC",
+        "-workers",
+        str(TLC_WORKERS),
+        "-config",
+        CFG_FILE_NAME,
+        entry_module,
+    ]
+    process = subprocess.Popen(
+        command,
+        cwd=CASSANDRA_DIR,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+    )
+    timed_out = False
+    try:
+        stdout, _ = process.communicate(timeout=SMOKE_SECONDS)
+    except subprocess.TimeoutExpired:
+        timed_out = True
+        process.terminate()
+        try:
+            stdout, _ = process.communicate(timeout=10)
+        except subprocess.TimeoutExpired:
+            process.kill()
+            stdout, _ = process.communicate()
+
+    output = decode_process_output(stdout)
+
+    cfg_error = any(
+        re.search(pattern, output, re.I)
+        for pattern in CFG_ERROR_PATTERNS
+    )
+    started = any(
+        marker.lower() in output.lower()
+        for marker in TLC_START_MARKERS
+    )
+    cfg_parser_ok = (not cfg_error) and started
+
+    tlc_error = any(
+        re.search(pattern, output, re.I)
+        for pattern in TLC_ERROR_PATTERNS
+    )
+
+    if cfg_error:
+        return False, False, output, timed_out
+    if not cfg_parser_ok:
+        return False, False, output, timed_out
+    if tlc_error:
+        return False, True, output, timed_out
+
+    if timed_out:
+        write_text(TLC_LOG_PATH, output)
+        return True, True, output, True
+
+    ok = process.returncode == 0
+    if ok:
+        write_text(TLC_LOG_PATH, output)
+    elif TLC_LOG_PATH.exists():
+        TLC_LOG_PATH.unlink()
+    return ok, True, output, False
+
+def concise_sany_reason(details: str) -> str:
+    module_matches = re.findall(
+        r"===== MODULE:\s*([^;\n]+)",
+        details,
+    )
+    module = (
+        module_matches[-1].strip()
+        if module_matches
+        else "unknown module"
+    )
+    location = re.search(
+        r"line\s+(\d+),\s*column\s+(\d+)",
+        details,
+        re.I,
+    )
+    if location:
+        return (
+            f"{module} line {location.group(1)}"
+            f"column {location.group(2)} did not pass SANY"
+        )
+
+    for pattern in (
+        r"Unknown operator[^\n]*",
+        r"Multiply-defined[^\n]*",
+        r"Semantic error[^\n]*",
+        r"\*\*\*Parse Error\*\*\*[^\n]*",
+    ):
+        match = re.search(pattern, details, re.I)
+        if match:
+            return f"{module}：{match.group(0).strip()[:350]}"
+    return f"{module} did not pass SANY"
+
+
+def concise_tlc_reason(details: str) -> str:
+    invariant = re.search(
+        r"Invariant\s+([A-Za-z_][A-Za-z0-9_]*)"
+        r"\s+is violated",
+        details,
+        re.I,
+    )
+    if invariant:
+        return f"invariant {invariant.group(1)} is violated"
+
+    for pattern in (
+        r"Deadlock reached",
+        r"Successor state is not completely specified[^\n]*",
+        r"Java ran out of memory",
+        r"OutOfMemoryError",
+        r"Temporal properties were violated",
+    ):
+        match = re.search(pattern, details, re.I)
+        if match:
+            return match.group(0).strip()[:400]
+
+    return "TLC one-minute test did not pass, see corresponding errNN_tlc.txt for details"
+
+
+def concise_cfg_reason(details: str) -> str:
+    for pattern in CFG_ERROR_PATTERNS:
+        match = re.search(pattern + r"[^\n]*", details, re.I)
+        if match:
+            return match.group(0).strip()[:400]
+    first = next(
+        (
+            line.strip()
+            for line in details.splitlines()
+            if line.strip()
+        ),
+        "",
+    )
+    return first[:400] or "Cassandra.cfg did not pass format or reference check"
+
+
+def new_status(stage1_values: Dict[str, str]) -> Dict[str, str]:
+    return {
+        "docs_result": stage1_values.get(
+            "docs_result",
+            "not_run",
+        ),
+        "spec_result": stage1_values.get(
+            "spec_result",
+            "not_run",
+        ),
+        "tla_result": "not_run",
+        "cfg_result": "not_run",
+        "hard_check_result": "not_run",
+        "sany_result": "not_run",
+        "tlc_result": "not_run",
+        "tlc_end": "not_run",
+        "manual_logic_result": "pending",
+    }
+
+
+def collect_failed_checks(status: Dict[str, str]) -> str:
+    mapping = (
+        ("docs", "docs_result"),
+        ("spec", "spec_result"),
+        ("tla", "tla_result"),
+        ("cfg", "cfg_result"),
+        ("hard_check", "hard_check_result"),
+        ("sany", "sany_result"),
+        ("tlc", "tlc_result"),
+    )
+    failed = [
+        name
+        for name, key in mapping
+        if status.get(key) == "fail"
+    ]
+    return ",".join(failed) if failed else "none"
+
+
+def validate_current(
+    stage1_values: Dict[str, str],
+) -> Tuple[Dict[str, str], Dict[str, str], str, str]:
+    status = new_status(stage1_values)
+    reasons: Dict[str, str] = {}
+
+    module_paths, module_texts, graph, tla_errors = analyze_modules()
+    status["tla_result"] = "pass" if not tla_errors else "fail"
+    if tla_errors:
+        reasons["tla_reason"] = "；".join(tla_errors[:8])
+
+    sany_order: List[Path] = []
+    structure_errors: List[str] = []
+    if not tla_errors:
+        sany_order, structure_errors = topological_module_order(
+            module_paths,
+            graph,
+        )
+
+    cfg_errors: List[str] = []
+    entry_module: str | None = None
+    if not tla_errors and not structure_errors:
+        cfg_errors, entry_module = cfg_precheck(
+            module_paths,
+            module_texts,
+            graph,
+        )
+
+    hard_errors: List[str] = []
+    if not tla_errors and not structure_errors and not cfg_errors:
+        hard_errors = hard_check_errors(
+            module_texts,
+            graph,
+            entry_module,
+        )
+
+    combined_hard_errors = structure_errors + hard_errors
+    if not tla_errors and not cfg_errors:
+        status["hard_check_result"] = (
+            "pass" if not combined_hard_errors else "fail"
+        )
+        if combined_hard_errors:
+            reasons["hard_check_reason"] = "；".join(
+                combined_hard_errors[:8]
+            )
+
+    if cfg_errors:
+        status["cfg_result"] = "fail"
+        reasons["cfg_reason"] = "；".join(cfg_errors[:8])
+    elif cfg_path().is_file() and not tla_errors:
+        status["cfg_result"] = "pass"
+
+    write_hard_check_report(
+        tla_errors,
+        structure_errors,
+        cfg_errors,
+        hard_errors,
+        entry_module,
+        sany_order,
+    )
+
+    if tla_errors:
+        return status, reasons, "tla", "\n".join(tla_errors)
+
+    if structure_errors:
+        return (
+            status,
+            reasons,
+            "structure",
+            "\n".join(structure_errors),
+        )
+
+    if cfg_errors or entry_module is None:
+        return (
+            status,
+            reasons,
+            "cfg",
+            "\n".join(cfg_errors)
+            or "cannot uniquely determine the entry module of Cassandra.cfg",
+        )
+
+    # SANY errors are fed back only to SANY, not mixed with hard check errors.
+    sany_ok, sany_output = run_sany(sany_order)
+    status["sany_result"] = "pass" if sany_ok else "fail"
+    if not sany_ok:
+        reasons["sany_reason"] = concise_sany_reason(sany_output)
+        return status, reasons, "sany", sany_output
+
+    # TLC errors are fed back only to TLC/cfg, not mixed with hard check errors.
+    tlc_ok, cfg_parser_ok, tlc_output, timed_out = run_tlc_smoke(
+        entry_module
+    )
+    status["tlc_end"] = "timeout" if timed_out else "completed"
+
+    if not cfg_parser_ok:
+        status["cfg_result"] = "fail"
+        status["tlc_result"] = "not_run"
+        reasons["cfg_reason"] = concise_cfg_reason(tlc_output)
+        return status, reasons, "cfg", tlc_output
+
+    status["cfg_result"] = "pass"
+    status["tlc_result"] = "pass" if tlc_ok else "fail"
+    if not tlc_ok:
+        reasons["tlc_reason"] = concise_tlc_reason(tlc_output)
+        return status, reasons, "tlc", tlc_output
+
+    # hard_check_result is used only for final evaluation, not entering the repair phase.
+    return status, reasons, "success", tlc_output
+
+
+def current_files_bundle() -> str:
+    sections: List[str] = []
+    for path in discover_tla_files():
+        sections.append(
+            f"===== FILE: {path.name} =====\n"
+            f"{read_text(path)}\n"
+            "===== END FILE ====="
+        )
+    if cfg_path().is_file():
+        sections.append(
+            f"===== FILE: {CFG_FILE_NAME} =====\n"
+            f"{read_text(cfg_path())}\n"
+            "===== END FILE ====="
+        )
+    return "\n\n".join(sections)[:MAX_BUNDLE_CHARS]
+
+
+def relevant_error_rules(error_text: str) -> str:
+    """Select only generic TLA+/cfg/next-state repair rules; do not send business/interface check clauses."""
+    rules = read_text(RULES_PATH)
+    matches = list(re.finditer(r"(?m)^##\s+.*$", rules))
+    chosen: List[str] = []
+    include = (
+        "character", "syntax", "extends", "operator", "cfg", "helper",
+        "function", "set", "record", "let", "scope", "variable", "init",
+        "typeok", "next-state", "next", "spec", "invariant",
+        "error phase", "incremental repair", "repair prompt",
+    )
+    exclude = (
+        "fixed files", "forced order", "qsearch", "qfrontierinterface",
+        "frontier common", "permission", "write", "migration", "static precheck",
+    )
+    for index, match in enumerate(matches):
+        end = matches[index + 1].start() if index + 1 < len(matches) else len(rules)
+        heading = match.group(0).lower()
+        if any(word in heading for word in exclude):
+            continue
+        if any(word in heading for word in include):
+            chosen.append(rules[match.start():end].strip())
+    return ("\n\n".join(chosen) or rules)[:20000]
+
+
+def build_repair_prompt(
+    stage: str,
+    error_details: str,
+) -> str:
+    rules = relevant_error_rules(error_details)
+    current_names = [path.name for path in discover_tla_files()]
+    if cfg_path().is_file():
+        current_names.append(CFG_FILE_NAME)
+
+    return f"""
+Please perform one minimal-scope incremental repair on the current Cassandra model.
+
+[Current failure type]
+{stage}
+
+[Fixed repair constraints]
+{FIXED_REPAIR_CONTRACT}
+
+[Current file names]
+{', '.join(current_names) if current_names else 'No valid files currently'}
+
+[Output limits for this round]
+- The total number of files modified, added, and deleted is at most {MAX_REPAIR_FILES}.
+- .tla files with any valid name can be added.
+- Cassandra.cfg may be modified, but a second cfg must not be generated.
+- Use the DELETE FILE marker when deleting deprecated TLA+ modules.
+- Modified or newly added files must return the complete content.
+- Do not output explanations.
+
+[Full error]
+{error_details[:MAX_ERROR_PROMPT_CHARS]}
+
+[All current files]
+{current_files_bundle()}
+
+[General error-prone rules related to the current error]
+{rules}
+""".strip()
+
+
+def normalize_error_stage(stage: str) -> str:
+    aliases = {
+        "tla": "tla",
+        "structure": "structure",
+        "cfg": "cfg",
+        "hard_check": "hard",
+        "sany": "sany",
+        "tlc": "tlc",
+        "repair": "repair",
+        "api": "api",
+        "pipeline": "pipeline",
+    }
+    normalized = aliases.get(stage.strip().lower(), stage.strip().lower())
+    normalized = re.sub(r"[^a-z0-9_]+", "_", normalized).strip("_")
+    return normalized or "unknown"
+
+
+def save_error(index: int, stage: str, details: str) -> Path:
+    stage_name = normalize_error_stage(stage)
+    error_path = ERROR_DIR / f"err{index:02d}_{stage_name}.txt"
+    content = (
+        f"time={now_text()}\n"
+        f"stage={stage}\n"
+        f"model={MODEL}\n"
+        f"error_index={index}\n"
+        f"\n===== DETAILS =====\n"
+        f"{details}\n"
+    )
+    write_text(error_path, content)
+    return error_path
+
+def apply_repair_response(
+    response_text: str,
+) -> Tuple[bool, str]:
+    files, unexpected, duplicates = extract_generated_files(
+        response_text,
+        allow_cfg=True,
+    )
+    deletes = extract_delete_requests(response_text)
+
+    problems: List[str] = []
+    if unexpected:
+        problems.append(
+            "Returned prohibited files: " + ", ".join(unexpected)
+        )
+    if duplicates:
+        problems.append(
+            "Duplicate output files in the same response: " + ", ".join(duplicates)
+        )
+
+    modifications = len(files) + len(deletes)
+    if modifications == 0:
+        problems.append("No file modification or deletion request in the repair response.")
+    if modifications > MAX_REPAIR_FILES:
+        problems.append(
+            f"This round involves {modifications} files,"
+            f"exceeding the upper limit {MAX_REPAIR_FILES}."
+        )
+    if CFG_FILE_NAME in deletes:
+        problems.append("Deleting Cassandra.cfg via DELETE FILE is not allowed.")
+    if set(files) & set(deletes):
+        problems.append(
+            "The same file cannot be modified and deleted at the same time:"
+            + ", ".join(sorted(set(files) & set(deletes)))
+        )
+
+    if problems:
+        return False, "；".join(problems)
+
+    for name in deletes:
+        path = CASSANDRA_DIR / name
+        if path.is_file():
+            path.unlink()
+
+    save_generated_files(files)
+    changed = sorted(files)
+    removed = sorted(deletes)
+    return True, (
+        "updated="
+        + (",".join(changed) if changed else "none")
+        + "; deleted="
+        + (",".join(removed) if removed else "none")
+    )
+
+
+def write_result(
+    result: Dict[str, object],
+    status: Dict[str, str],
+    reasons: Dict[str, str],
+) -> None:
+    result.update(status)
+    result["failed_checks"] = collect_failed_checks(status)
+    for key, value in reasons.items():
+        if value:
+            result[key] = value
+
+    order = [
+        "model_family",
+        "provider",
+        "model",
+        "base_url",
+        "repeat_index",
+        "check_scheme",
+        "hard_check_usage",
+        "started_at",
+        "stage1_source",
+        "stage1_model",
+        "stage1_provider",
+        "stage1_model_match",
+        "spec_sha256",
+        "docs_sha256",
+        "docs_result",
+        "spec_result",
+        "tla_result",
+        "cfg_result",
+        "hard_check_result",
+        "sany_result",
+        "tlc_result",
+        "tlc_end",
+        "manual_logic_result",
+        "failed_checks",
+        "tla_reason",
+        "cfg_reason",
+        "hard_check_reason",
+        "sany_reason",
+        "tlc_reason",
+        "api_reason",
+        "generated_tla_files",
+        "entry_module",
+        "initial_tla_calls",
+        "initial_cfg_calls",
+        "repair_rounds",
+        "max_repair_rounds",
+        "stop_reason",
+        "api_calls",
+        "prompt_tokens",
+        "completion_tokens",
+        "total_tokens",
+        "finished_at",
+    ]
+    lines: List[str] = []
+    for key in order:
+        if key in result:
+            lines.append(f"{key}={result[key]}")
+    write_text(RESULT_PATH, "\n".join(lines) + "\n")
+
+
+def print_summary(
+    status: Dict[str, str],
+    reasons: Dict[str, str],
+) -> None:
+    labels = (
+        ("Official Documentation", "docs_result"),
+        ("Cassandra Specification", "spec_result"),
+        ("TLA+ Generation", "tla_result"),
+        ("cfg Generation and Format", "cfg_result"),
+        ("Hard Checks", "hard_check_result"),
+        ("SANY Compilation", "sany_result"),
+        ("TLC One-Minute Test", "tlc_result"),
+        ("Manual Logic Check", "manual_logic_result"),
+    )
+    mapping = {
+        "pass": "Pass",
+        "fail": "Not Passed",
+        "not_run": "Not Executed",
+        "pending": "Pending Check",
+    }
+
+    print("\nResult Summary:")
+    for label, key in labels:
+        value = status.get(key, "not_run")
+        print(f"  {label}：{mapping.get(value, value)}")
+
+    if status.get("tlc_result") != "not_run":
+        print(f"  TLC End Mode: {status.get('tlc_end')}")
+
+    print(f"  Number of Generated TLA Files: {len(discover_tla_files())}")
+    print(f"  Failed Items: {collect_failed_checks(status)}")
+    for key in (
+        "tla_reason",
+        "cfg_reason",
+        "hard_check_reason",
+        "sany_reason",
+        "tlc_reason",
+        "api_reason",
+    ):
+        if reasons.get(key):
+            print(f"  {key}：{reasons[key]}")
+
+
+def update_dynamic_metadata(result: Dict[str, object]) -> None:
+    result["generated_tla_files"] = ",".join(
+        path.name for path in discover_tla_files()
+    ) or "none"
+
+    try:
+        module_paths, module_texts, graph, tla_errors = analyze_modules()
+        if tla_errors or not cfg_path().is_file():
+            result["entry_module"] = "unknown"
+            return
+        cfg_errors, entry_module = cfg_precheck(
+            module_paths,
+            module_texts,
+            graph,
+        )
+        result["entry_module"] = (
+            entry_module
+            if entry_module and not cfg_errors
+            else "unknown"
+        )
+    except Exception:
+        result["entry_module"] = "unknown"
+
+
+def run_one_experiment(
+    qdrant_spec: Path,
+    qdrant_helper: Path | None,
+) -> Dict[str, object]:
+    run_dir, stage1_run, stage1_values, repeat_index = prepare_run()
+
+    print(
+        f"\n=== Cassandra {MODEL_FAMILY}/{repeat_index:02d}："
+        "Rule-Augmented Generation + File/cfg/SANY/TLC Iterative Repair ==="
+    )
+    print(f"Experiment Directory: {run_dir}")
+    print(f"Corresponding Stage One Input: {stage1_run}")
+    print(f"Actual Model: {MODEL_FAMILY} -> {PROVIDER}/{MODEL}")
+
+    result: Dict[str, object] = {
+        "model_family": MODEL_FAMILY,
+        "provider": PROVIDER,
+        "model": MODEL,
+        "base_url": BASE_URL,
+        "repeat_index": f"{repeat_index:02d}",
+        "check_scheme": "grouped_error_directory_with_success_tlc_v4",
+        "hard_check_usage": "final_evaluation_only_no_feedback",
+        "started_at": now_text(),
+        "stage1_source": f"{MODEL_FAMILY}/{repeat_index:02d}/stage1",
+        "stage1_model": stage1_values.get("model", "unknown"),
+        "stage1_provider": stage1_values.get("provider", "unknown"),
+        "stage1_model_match": (
+            "true"
+            if stage1_values.get("model") == MODEL
+            else "false"
+        ),
+        "spec_sha256": sha256_file(STAGE1_SPEC_PATH),
+        "docs_sha256": sha256_file(STAGE1_DOCS_PATH),
+        "initial_tla_calls": 0,
+        "initial_cfg_calls": 0,
+        "repair_rounds": 0,
+        "max_repair_rounds": MAX_REPAIR_ROUNDS,
+        "api_calls": 0,
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0,
+        "stop_reason": "none",
+    }
+    status = new_status(stage1_values)
+    reasons: Dict[str, str] = {}
+    client = create_client()
+    reference_bundle = build_reference_bundle(
+        qdrant_spec,
+        qdrant_helper,
+    )
+    cfg_initial_called = False
+    error_index = 0
+    stage = "initial"
+    details = ""
+
+    try:
+        print("Calling model to autonomously design Cassandra TLA+ modules...")
+        response, usage = call_model(
+            client,
+            build_tla_prompt(reference_bundle),
+            "You are a strict TLA+ formal modeling engineer."
+            "Initial generation should preserve Cassandra specification semantics,"
+            "During repair, only handle current file, cfg, SANY, or TLC errors.",
+        )
+        add_usage(result, usage)
+        result["initial_tla_calls"] = 1
+
+        tla_files, unexpected, duplicates = extract_generated_files(
+            response,
+            allow_cfg=False,
+        )
+        save_generated_files(tla_files)
+        initial_tla_problems: List[str] = []
+        if unexpected:
+            initial_tla_problems.append(
+                "Initial TLA response contains forbidden files:" + ", ".join(unexpected)
+            )
+        if duplicates:
+            initial_tla_problems.append(
+                "Initial TLA response contains duplicate files:" + ", ".join(duplicates)
+            )
+        if initial_tla_problems:
+            reasons["tla_reason"] = "；".join(initial_tla_problems)
+
+        if discover_tla_files():
+            print("Generating Cassandra.cfg for the first time based on the actual module...")
+            response, usage = call_model(
+                client,
+                build_cfg_prompt(reference_bundle),
+                "You are a strict TLC configuration engineer."
+                "Generate a unique runnable Cassandra.cfg based on the current Cassandra TLA+ files.",
+            )
+            add_usage(result, usage)
+            result["initial_cfg_calls"] = 1
+            cfg_initial_called = True
+            cfg_files, unexpected, duplicates = extract_generated_files(
+                response,
+                allow_cfg=True,
+            )
+            save_generated_files(cfg_files)
+            if unexpected or duplicates:
+                reasons["cfg_reason"] = "；".join(
+                    (["Forbidden files:" + ", ".join(unexpected)] if unexpected else [])
+                    + (["Duplicate files:" + ", ".join(duplicates)] if duplicates else [])
+                )
+
+        status, validation_reasons, stage, details = validate_current(
+            stage1_values
+        )
+        reasons.update(validation_reasons)
+        if stage != "success":
+            error_index += 1
+            save_error(error_index, stage, details)
+
+        while stage != "success" and int(result["repair_rounds"]) < MAX_REPAIR_ROUNDS:
+            # After TLA files appear, if cfg has never been generated, complete the first cfg generation first;
+            # This call belongs to initial configuration generation and does not count toward repair rounds.
+            if discover_tla_files() and not cfg_initial_called:
+                response, usage = call_model(
+                    client,
+                    build_cfg_prompt(reference_bundle),
+                    "You are a strict TLC configuration engineer."
+                    "Generate a unique runnable Cassandra.cfg based on the current Cassandra TLA+ files.",
+                )
+                add_usage(result, usage)
+                result["initial_cfg_calls"] = 1
+                cfg_initial_called = True
+                cfg_files, unexpected, duplicates = extract_generated_files(
+                    response,
+                    allow_cfg=True,
+                )
+                save_generated_files(cfg_files)
+                status, validation_reasons, stage, details = validate_current(
+                    stage1_values
+                )
+                reasons = validation_reasons
+                if stage != "success":
+                    error_index += 1
+                    save_error(error_index, stage, details)
+                continue
+
+            result["repair_rounds"] = int(result["repair_rounds"]) + 1
+            round_no = int(result["repair_rounds"])
+            print(
+                f"{MODEL_FAMILY}/{repeat_index:02d} incremental repair "
+                f"{round_no}/{MAX_REPAIR_ROUNDS}, current issue={stage}"
+            )
+            response, usage = call_model(
+                client,
+                build_repair_prompt(stage, details),
+                "You are a strict TLA+ incremental repair engineer."
+                "Only handle current file structure, cfg, SANY, or TLC errors;"
+                "Do not modify code based on hard check results.",
+            )
+            add_usage(result, usage)
+            applied, apply_message = apply_repair_response(response)
+            if not applied:
+                stage = "api_or_repair"
+                details = apply_message
+                reasons["api_reason"] = apply_message
+                error_index += 1
+                save_error(error_index, stage, details)
+                continue
+
+            if discover_tla_files() and not cfg_initial_called:
+                response, usage = call_model(
+                    client,
+                    build_cfg_prompt(reference_bundle),
+                    "You are a strict TLC configuration engineer."
+                    "Generate a unique runnable Cassandra.cfg based on the current Cassandra TLA+ files.",
+                )
+                add_usage(result, usage)
+                result["initial_cfg_calls"] = 1
+                cfg_initial_called = True
+                cfg_files, _, _ = extract_generated_files(
+                    response,
+                    allow_cfg=True,
+                )
+                save_generated_files(cfg_files)
+
+            status, validation_reasons, stage, details = validate_current(
+                stage1_values
+            )
+            reasons = validation_reasons
+            if stage != "success":
+                error_index += 1
+                save_error(error_index, stage, details)
+
+        if stage == "success":
+            result["stop_reason"] = "execution_success"
+            print(
+                f"{MODEL_FAMILY}/{repeat_index:02d} passed"
+                "files/cfg, SANY and TLC, stop repair."
+            )
+        elif int(result["repair_rounds"]) >= MAX_REPAIR_ROUNDS:
+            result["stop_reason"] = "repair_limit"
+            print(
+                f"Reached maximum repair rounds {MAX_REPAIR_ROUNDS}, stop repair."
+            )
+        else:
+            result["stop_reason"] = stage
+
+    except Exception as exc:
+        reasons["api_reason"] = str(exc).splitlines()[0][:500]
+        result["stop_reason"] = "pipeline_error"
+        error_index += 1
+        save_error(error_index, "pipeline", str(exc))
+        print(
+            f"{MODEL_FAMILY}/{repeat_index:02d} pipeline exception: {exc}"
+        )
+    finally:
+        # status is the result of the most recent complete verification of the current final files.
+        # hard_check_result is written to result.txt, but is never used as iterative repair feedback.
+        result["finished_at"] = now_text()
+        update_dynamic_metadata(result)
+        print_summary(status, reasons)
+        write_result(result, status, reasons)
+        print(f"Result file: {RESULT_PATH}")
+        if HARD_CHECK_LOG_PATH.is_file():
+            print(f"Hard check failed, report: {HARD_CHECK_LOG_PATH}")
+        else:
+            print("Hard check passed, no additional report generated.")
+        if TLC_LOG_PATH.is_file():
+            print(f"TLC passed output: {TLC_LOG_PATH}")
+        error_files = (
+            sorted(ERROR_DIR.glob("err[0-9][0-9]_*.txt"))
+            if ERROR_DIR.is_dir()
+            else []
+        )
+        if error_files:
+            print(
+                f"Failure records: total {len(error_files)}, "
+                f"located at {ERROR_DIR}"
+            )
+
+    return result
+
+
+def main() -> int:
+    qdrant_spec, qdrant_helper = validate_inputs()
+    result = run_one_experiment(qdrant_spec, qdrant_helper)
+    print("\n=== Cassandra Stage 2 completed ===")
+    print(
+        f"{result.get('model_family')}/"
+        f"{int(result.get('repeat_index', 0)):02d}/stage2: recorded"
+    )
+    return 0
+
+if __name__ == "__main__":
+    raise SystemExit(main())

@@ -1,0 +1,30 @@
+time=2026-08-04T20:07:22+08:00
+stage=sany
+model=deepseek-v4-pro
+error_index=8
+
+===== DETAILS =====
+===== COMMAND =====
+java -Xmx2g -cp D:\python\formalization\docs\tla2tools.jar tla2sany.SANY QCore.tla
+===== MODULE: QCore.tla; RETURN CODE: 4294967295 =====
+
+****** SANY2 Version 2.1 created 24 February 2014
+
+Parsing file D:\python\formalization\output1\t2\03\Qdrant\QCore.tla
+Parsing file C:\Users\27\AppData\Local\Temp\Naturals.tla
+Parsing file C:\Users\27\AppData\Local\Temp\FiniteSets.tla
+Parsing file D:\python\formalization\output1\t2\03\Qdrant\QCfgHelpers.tla
+
+Fatal errors while parsing TLA+ spec in file QCore.tla
+
+tla2sany.semantic.AbortException
+*** Abort messages: 1
+
+Unknown location
+
+Circular dependency among .tla files; dependency cycle is:
+
+  QCore.tla --> QCfgHelpers.tla --> QCore.tla
+
+
+

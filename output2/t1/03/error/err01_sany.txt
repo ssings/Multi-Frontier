@@ -1,0 +1,242 @@
+time=2026-08-04T20:53:12+08:00
+stage=sany
+model=deepseek-v4-pro
+error_index=1
+
+===== DETAILS =====
+===== MODULE: CCore.tla; RETURN CODE: 0 =====
+
+****** SANY2 Version 2.1 created 24 February 2014
+
+Parsing file D:\python\formalization\output2\t1\03\Cassandra\CCore.tla
+Parsing file C:\Users\27\AppData\Local\Temp\Naturals.tla
+Semantic processing of module Naturals
+Semantic processing of module CCore
+Semantic errors:
+
+*** Errors: 3
+
+line 46, col 59 to line 46, col 69 of module CCore
+
+Unknown operator: `Cardinality'.
+
+
+line 49, col 38 to line 49, col 48 of module CCore
+
+Unknown operator: `Cardinality'.
+
+
+line 57, col 26 to line 57, col 36 of module CCore
+
+Unknown operator: `Cardinality'.
+
+
+
+
+===== MODULE: CAuth.tla; RETURN CODE: 0 =====
+
+****** SANY2 Version 2.1 created 24 February 2014
+
+Parsing file D:\python\formalization\output2\t1\03\Cassandra\CAuth.tla
+Parsing file D:\python\formalization\output2\t1\03\Cassandra\CCore.tla
+Parsing file C:\Users\27\AppData\Local\Temp\Naturals.tla
+Semantic processing of module Naturals
+Semantic processing of module CCore
+Semantic errors:
+
+*** Errors: 3
+
+line 46, col 59 to line 46, col 69 of module CCore
+
+Unknown operator: `Cardinality'.
+
+
+line 49, col 38 to line 49, col 48 of module CCore
+
+Unknown operator: `Cardinality'.
+
+
+line 57, col 26 to line 57, col 36 of module CCore
+
+Unknown operator: `Cardinality'.
+
+
+
+Semantic processing of module CAuth
+Semantic errors:
+
+*** Errors: 3
+
+line 46, col 59 to line 46, col 69 of module CCore
+
+Unknown operator: `Cardinality'.
+
+
+line 49, col 38 to line 49, col 48 of module CCore
+
+Unknown operator: `Cardinality'.
+
+
+line 57, col 26 to line 57, col 36 of module CCore
+
+Unknown operator: `Cardinality'.
+
+
+
+
+===== MODULE: CCfgHelpers.tla; RETURN CODE: 0 =====
+
+****** SANY2 Version 2.1 created 24 February 2014
+
+Parsing file D:\python\formalization\output2\t1\03\Cassandra\CCfgHelpers.tla
+Parsing file D:\python\formalization\output2\t1\03\Cassandra\CCore.tla
+Parsing file C:\Users\27\AppData\Local\Temp\Naturals.tla
+Semantic processing of module Naturals
+Semantic processing of module CCore
+Semantic errors:
+
+*** Errors: 3
+
+line 46, col 59 to line 46, col 69 of module CCore
+
+Unknown operator: `Cardinality'.
+
+
+line 49, col 38 to line 49, col 48 of module CCore
+
+Unknown operator: `Cardinality'.
+
+
+line 57, col 26 to line 57, col 36 of module CCore
+
+Unknown operator: `Cardinality'.
+
+
+
+Semantic processing of module CCfgHelpers
+Semantic errors:
+
+*** Errors: 3
+
+line 46, col 59 to line 46, col 69 of module CCore
+
+Unknown operator: `Cardinality'.
+
+
+line 49, col 38 to line 49, col 48 of module CCore
+
+Unknown operator: `Cardinality'.
+
+
+line 57, col 26 to line 57, col 36 of module CCore
+
+Unknown operator: `Cardinality'.
+
+
+
+
+===== MODULE: CWrite.tla; RETURN CODE: 0 =====
+
+****** SANY2 Version 2.1 created 24 February 2014
+
+Parsing file D:\python\formalization\output2\t1\03\Cassandra\CWrite.tla
+Parsing file D:\python\formalization\output2\t1\03\Cassandra\CAuth.tla
+Parsing file D:\python\formalization\output2\t1\03\Cassandra\CCore.tla
+Parsing file C:\Users\27\AppData\Local\Temp\Naturals.tla
+Semantic processing of module Naturals
+Semantic processing of module CCore
+Semantic errors:
+
+*** Errors: 3
+
+line 46, col 59 to line 46, col 69 of module CCore
+
+Unknown operator: `Cardinality'.
+
+
+line 49, col 38 to line 49, col 48 of module CCore
+
+Unknown operator: `Cardinality'.
+
+
+line 57, col 26 to line 57, col 36 of module CCore
+
+Unknown operator: `Cardinality'.
+
+
+
+Semantic processing of module CAuth
+Semantic errors:
+
+*** Errors: 3
+
+line 46, col 59 to line 46, col 69 of module CCore
+
+Unknown operator: `Cardinality'.
+
+
+line 49, col 38 to line 49, col 48 of module CCore
+
+Unknown operator: `Cardinality'.
+
+
+line 57, col 26 to line 57, col 36 of module CCore
+
+Unknown operator: `Cardinality'.
+
+
+
+Semantic processing of module CWrite
+Semantic errors:
+
+*** Errors: 4
+
+line 46, col 59 to line 46, col 69 of module CCore
+
+Unknown operator: `Cardinality'.
+
+
+line 49, col 38 to line 49, col 48 of module CCore
+
+Unknown operator: `Cardinality'.
+
+
+line 57, col 26 to line 57, col 36 of module CCore
+
+Unknown operator: `Cardinality'.
+
+
+line 42, col 11 to line 42, col 21 of module CWrite
+
+Unknown operator: `Cardinality'.
+
+
+
+
+===== MODULE: CReplica.tla; RETURN CODE: 4294967295 =====
+
+****** SANY2 Version 2.1 created 24 February 2014
+
+Parsing file D:\python\formalization\output2\t1\03\Cassandra\CReplica.tla
+***Parse Error***
+Was expecting "Identifier Declaration, prefix op or _"
+Encountered ""One"" at line 8, column 13 and token "," 
+
+Residual stack trace follows:
+Identifier LHS starting at line 8, column 1.
+Definition starting at line 8, column 1.
+Module body starting at line 5, column 1.
+Module definition starting at line 1, column 1.
+
+
+Fatal errors while parsing TLA+ spec in file CReplica.tla
+
+tla2sany.semantic.AbortException
+*** Abort messages: 1
+
+In module CReplica
+
+Could not parse module CReplica from file CReplica.tla
+
+
+

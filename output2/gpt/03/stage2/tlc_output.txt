@@ -1,0 +1,26 @@
+TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
+Running breadth-first search Model-Checking with fp 8 and seed 7766422536158947100 with 1 worker on 8 cores with 1820MB heap and 64MB offheap memory (Windows 10 10.0 amd64, Oracle Corporation 1.8.0_131 x86_64, MSBDiskFPSet, DiskStateQueue).
+Parsing file D:\python\formalization\output2\gpt\03\stage2\Cassandra\CassandraSmoke.tla
+Parsing file D:\python\formalization\output2\gpt\03\stage2\Cassandra\CassandraFrontier.tla
+Parsing file D:\python\formalization\output2\gpt\03\stage2\Cassandra\CassandraCfgHelpers.tla
+Parsing file C:\Users\27\AppData\Local\Temp\Naturals.tla
+Parsing file C:\Users\27\AppData\Local\Temp\FiniteSets.tla
+Parsing file C:\Users\27\AppData\Local\Temp\Sequences.tla
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module CassandraFrontier
+Semantic processing of module CassandraCfgHelpers
+Semantic processing of module CassandraSmoke
+Starting... (2026-08-09 18:54:36)
+Computing initial states...
+Finished computing initial states: 1 distinct state generated at 2026-08-09 18:54:37.
+Progress(5) at 2026-08-09 18:54:40: 52,394 states generated (52,394 s/min), 189 distinct states found (189 ds/min), 112 states left on queue.
+Model checking completed. No error has been found.
+  Estimates of the probability that TLC did not check all reachable states
+  because two distinct states had the same fingerprint:
+  calculated (optimistic):  val = 7.7E-11
+988990 states generated, 1441 distinct states found, 0 states left on queue.
+The depth of the complete state graph search is 10.
+The average outdegree of the complete state graph is 1 (minimum is 0, the maximum 18 and the 95th percentile is 3).
+Finished in 45s at (2026-08-09 18:55:22)

@@ -1,0 +1,63 @@
+time=2026-08-04T19:37:45+08:00
+stage=tlc
+model=deepseek-v4-pro
+error_index=19
+
+===== DETAILS =====
+===== COMMAND =====
+java -Xmx2g -cp D:\python\formalization\docs\tla2tools.jar tlc2.TLC -workers 1 -config D:\python\formalization\output1\Qdrant.cfg QIntegrated.tla
+===== RETURN CODE: 255; TIMED OUT: False =====
+TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
+Running breadth-first search Model-Checking with fp 65 and seed 5141263511270804097 with 1 worker on 8 cores with 1820MB heap and 64MB offheap memory (Windows 10 10.0 amd64, Oracle Corporation 1.8.0_131 x86_64, MSBDiskFPSet, DiskStateQueue).
+Parsing file D:\python\formalization\output1\t2\02\Qdrant\QIntegrated.tla
+Parsing file D:\python\formalization\output1\t2\02\Qdrant\QSearch.tla
+Parsing file D:\python\formalization\output1\t2\02\Qdrant\QCfgHelpers.tla
+Parsing file D:\python\formalization\output1\t2\02\Qdrant\QMigrate.tla
+Parsing file D:\python\formalization\output1\t2\02\Qdrant\QReplica.tla
+Parsing file D:\python\formalization\output1\t2\02\Qdrant\QWrite.tla
+Parsing file D:\python\formalization\output1\t2\02\Qdrant\QAuth.tla
+Parsing file D:\python\formalization\output1\t2\02\Qdrant\QCore.tla
+Parsing file C:\Users\27\AppData\Local\Temp\Naturals.tla
+Parsing file C:\Users\27\AppData\Local\Temp\FiniteSets.tla
+Parsing file C:\Users\27\AppData\Local\Temp\Sequences.tla
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module QCore
+Semantic processing of module QAuth
+Semantic processing of module QWrite
+Semantic processing of module QReplica
+Semantic processing of module QMigrate
+Semantic processing of module QSearch
+Semantic processing of module QCfgHelpers
+Semantic processing of module QIntegrated
+Starting... (2026-08-04 19:37:44)
+Computing initial states...
+Error: current state is not a legal state
+While working on the initial state:
+/\ lastSearch = [ kind |-> "None",
+  principal |-> P1,
+  collection |-> C1,
+  level |-> "One",
+  result |-> {},
+  authorized |-> FALSE,
+  executed |-> FALSE ]
+/\ migrateState = null
+/\ replicaHas = null
+/\ copiedData = null
+/\ lastMigrate = null
+/\ lastWrite = null
+/\ permission = null
+/\ shardOwner = null
+/\ writeState = null
+/\ migrateDst = null
+/\ applied = null
+/\ shardLocation = null
+/\ searchResult = {}
+/\ ackSet = null
+/\ shardData = null
+/\ wal = null
+/\ migrateSrc = null
+
+Finished in 01s at (2026-08-04 19:37:45)
+

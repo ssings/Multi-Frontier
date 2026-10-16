@@ -1,0 +1,98 @@
+time=2026-08-04T22:28:15+08:00
+stage=tlc
+model=deepseek-v4-pro
+error_index=1
+
+===== DETAILS =====
+TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
+Running breadth-first search Model-Checking with fp 20 and seed -8730989552411478096 with 1 worker on 8 cores with 1820MB heap and 64MB offheap memory (Windows 10 10.0 amd64, Oracle Corporation 1.8.0_131 x86_64, MSBDiskFPSet, DiskStateQueue).
+Parsing file D:\python\formalization\output2\t3\01\Cassandra\CIntegrated.tla
+Parsing file D:\python\formalization\output2\t3\01\Cassandra\CFrontierInterface.tla
+Parsing file D:\python\formalization\output2\t3\01\Cassandra\CassandraCfgHelpers.tla
+Parsing file D:\python\formalization\output2\t3\01\Cassandra\CQuery.tla
+Parsing file D:\python\formalization\output2\t3\01\Cassandra\CMigrate.tla
+Parsing file D:\python\formalization\output2\t3\01\Cassandra\CReplica.tla
+Parsing file D:\python\formalization\output2\t3\01\Cassandra\CWrite.tla
+Parsing file D:\python\formalization\output2\t3\01\Cassandra\CAuth.tla
+Parsing file D:\python\formalization\output2\t3\01\Cassandra\CCore.tla
+Parsing file C:\Users\27\AppData\Local\Temp\Naturals.tla
+Parsing file C:\Users\27\AppData\Local\Temp\FiniteSets.tla
+Parsing file C:\Users\27\AppData\Local\Temp\Sequences.tla
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module CCore
+Semantic processing of module CAuth
+Semantic processing of module CWrite
+Semantic processing of module CReplica
+Semantic processing of module CMigrate
+Semantic processing of module CQuery
+Semantic processing of module CFrontierInterface
+Semantic processing of module CassandraCfgHelpers
+Semantic processing of module CIntegrated
+Starting... (2026-08-04 22:28:14)
+Computing initial states...
+Error: Attempted to check if the non-enumerable value
+Node1
+is element of
+{ {},
+  {Node1},
+  {Node2},
+  {Node3},
+  {Node1, Node2},
+  {Node1, Node3},
+  {Node2, Node3},
+  {Node1, Node2, Node3} }
+While working on the initial state:
+/\ writeLevel = (D1 :> "ONE" @@ D2 :> "ONE")
+/\ ackCount = (D1 :> 0 @@ D2 :> 0)
+/\ migrateState = (TR1 :> "Stable")
+/\ replicaHas = (Node1 :> {} @@ Node2 :> {} @@ Node3 :> {})
+/\ copiedData = (TR1 :> {})
+/\ lastMigrate = [ kind |-> "None",
+  authorized |-> FALSE,
+  principal |-> Alice,
+  keyspace |-> KS1,
+  tokenRange |-> TR1,
+  phase |-> "Start" ]
+/\ lastWrite = [ kind |-> "None",
+  authorized |-> FALSE,
+  principal |-> Alice,
+  keyspace |-> KS1,
+  dataItem |-> D1,
+  accepted |-> FALSE ]
+/\ permission = (Alice :> (KS1 :> {}) @@ Bob :> (KS1 :> {}))
+/\ migrateDst = (TR1 :> Node1)
+/\ committed = {}
+/\ lastQuery = [ kind |-> "None",
+  authorized |-> FALSE,
+  result |-> {},
+  principal |-> Alice,
+  keyspace |-> KS1,
+  level |-> "ONE",
+  executed |-> FALSE ]
+/\ writeRequested = {}
+/\ migrateSrc = (TR1 :> Node1)
+/\ currentReplicas = (TR1 :> {Node1, Node2, Node3})
+
+Error: TLC was unable to fingerprint.
+
+Fingerprint Stack Trace:
+1) line 109, col 40 to line 109, col 51 of module CMigrate
+0) line 109, col 24 to line 109, col 52 of module CMigrate
+
+Reason:
+Attempted to check if the non-enumerable value
+Node1
+is element of
+{ {},
+  {Node1},
+  {Node2},
+  {Node3},
+  {Node1, Node2},
+  {Node1, Node3},
+  {Node2, Node3},
+  {Node1, Node2, Node3} }
+1 states generated, 1 distinct states found, 1 states left on queue.
+Finished in 00s at (2026-08-04 22:28:14)
+

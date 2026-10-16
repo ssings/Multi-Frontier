@@ -1,0 +1,196 @@
+time=2026-08-04T21:51:24+08:00
+stage=tlc
+model=deepseek-v4-pro
+error_index=1
+
+===== DETAILS =====
+TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
+Running breadth-first search Model-Checking with fp 27 and seed -2878755598321847278 with 1 worker on 8 cores with 1820MB heap and 64MB offheap memory (Windows 10 10.0 amd64, Oracle Corporation 1.8.0_131 x86_64, MSBDiskFPSet, DiskStateQueue).
+Parsing file D:\python\formalization\output2\t2\03\Cassandra\CIntegrated.tla
+Parsing file D:\python\formalization\output2\t2\03\Cassandra\CFrontierInterface.tla
+Parsing file D:\python\formalization\output2\t2\03\Cassandra\CHelpers.tla
+Parsing file D:\python\formalization\output2\t2\03\Cassandra\CMigrate.tla
+Parsing file D:\python\formalization\output2\t2\03\Cassandra\CQuery.tla
+Parsing file D:\python\formalization\output2\t2\03\Cassandra\CReplica.tla
+Parsing file D:\python\formalization\output2\t2\03\Cassandra\CWrite.tla
+Parsing file D:\python\formalization\output2\t2\03\Cassandra\CAuth.tla
+Parsing file D:\python\formalization\output2\t2\03\Cassandra\CCore.tla
+Parsing file C:\Users\27\AppData\Local\Temp\Naturals.tla
+Parsing file C:\Users\27\AppData\Local\Temp\FiniteSets.tla
+Parsing file C:\Users\27\AppData\Local\Temp\Sequences.tla
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module CCore
+Semantic processing of module CAuth
+Semantic errors:
+
+*** Errors: 1
+
+line 59, col 74 to line 59, col 75 of module CAuth
+
+Unknown operator: `ks'.
+
+
+
+Semantic processing of module CWrite
+Semantic errors:
+
+*** Errors: 1
+
+line 59, col 74 to line 59, col 75 of module CAuth
+
+Unknown operator: `ks'.
+
+
+
+Semantic processing of module CReplica
+Semantic errors:
+
+*** Errors: 1
+
+line 59, col 74 to line 59, col 75 of module CAuth
+
+Unknown operator: `ks'.
+
+
+
+Semantic processing of module CQuery
+Semantic errors:
+
+*** Errors: 1
+
+line 59, col 74 to line 59, col 75 of module CAuth
+
+Unknown operator: `ks'.
+
+
+
+Semantic processing of module CMigrate
+Semantic errors:
+
+*** Errors: 2
+
+line 59, col 74 to line 59, col 75 of module CAuth
+
+Unknown operator: `ks'.
+
+
+line 62, col 61 to line 62, col 62 of module CMigrate
+
+Unknown operator: `sh'.
+
+
+
+Semantic processing of module CFrontierInterface
+Semantic errors:
+
+*** Errors: 2
+
+line 59, col 74 to line 59, col 75 of module CAuth
+
+Unknown operator: `ks'.
+
+
+line 62, col 61 to line 62, col 62 of module CMigrate
+
+Unknown operator: `sh'.
+
+
+
+Semantic processing of module CHelpers
+Semantic errors:
+
+*** Errors: 8
+
+line 59, col 74 to line 59, col 75 of module CAuth
+
+Unknown operator: `ks'.
+
+
+line 62, col 61 to line 62, col 62 of module CMigrate
+
+Unknown operator: `sh'.
+
+
+line 5, col 43 to line 5, col 44 of module CHelpers
+
+Unknown operator: `N1'.
+
+
+line 5, col 47 to line 5, col 48 of module CHelpers
+
+Unknown operator: `N2'.
+
+
+line 5, col 51 to line 5, col 52 of module CHelpers
+
+Unknown operator: `N3'.
+
+
+line 8, col 45 to line 8, col 46 of module CHelpers
+
+Unknown operator: `S1'.
+
+
+line 9, col 48 to line 9, col 50 of module CHelpers
+
+Unknown operator: `KS1'.
+
+
+line 10, col 40 to line 10, col 42 of module CHelpers
+
+Unknown operator: `KS1'.
+
+
+
+Semantic processing of module CIntegrated
+Semantic errors:
+
+*** Errors: 8
+
+line 59, col 74 to line 59, col 75 of module CAuth
+
+Unknown operator: `ks'.
+
+
+line 62, col 61 to line 62, col 62 of module CMigrate
+
+Unknown operator: `sh'.
+
+
+line 5, col 43 to line 5, col 44 of module CHelpers
+
+Unknown operator: `N1'.
+
+
+line 5, col 47 to line 5, col 48 of module CHelpers
+
+Unknown operator: `N2'.
+
+
+line 5, col 51 to line 5, col 52 of module CHelpers
+
+Unknown operator: `N3'.
+
+
+line 8, col 45 to line 8, col 46 of module CHelpers
+
+Unknown operator: `S1'.
+
+
+line 9, col 48 to line 9, col 50 of module CHelpers
+
+Unknown operator: `KS1'.
+
+
+line 10, col 40 to line 10, col 42 of module CHelpers
+
+Unknown operator: `KS1'.
+
+
+
+Starting... (2026-08-04 21:51:24)
+Error: Parsing or semantic analysis failed.
+Finished in 00s at (2026-08-04 21:51:24)
+

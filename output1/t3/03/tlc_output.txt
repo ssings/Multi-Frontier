@@ -1,0 +1,35 @@
+===== COMMAND =====
+java -Xmx2g -cp D:\python\formalization\docs\tla2tools.jar tlc2.TLC -workers 1 -config D:\python\formalization\output1\Qdrant.cfg QIntegrated.tla
+===== RETURN CODE: 1; TIMED OUT: True =====
+TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
+Running breadth-first search Model-Checking with fp 24 and seed -3394665330670147233 with 1 worker on 8 cores with 1820MB heap and 64MB offheap memory (Windows 10 10.0 amd64, Oracle Corporation 1.8.0_131 x86_64, MSBDiskFPSet, DiskStateQueue).
+Parsing file D:\python\formalization\output1\ds\03\Qdrant\QIntegrated.tla
+Parsing file D:\python\formalization\output1\ds\03\Qdrant\QFrontierInterface.tla
+Parsing file D:\python\formalization\output1\ds\03\Qdrant\QCfgHelpers.tla
+Parsing file D:\python\formalization\output1\ds\03\Qdrant\QSearch.tla
+Parsing file D:\python\formalization\output1\ds\03\Qdrant\QMigrate.tla
+Parsing file D:\python\formalization\output1\ds\03\Qdrant\QReplica.tla
+Parsing file D:\python\formalization\output1\ds\03\Qdrant\QWrite.tla
+Parsing file D:\python\formalization\output1\ds\03\Qdrant\QAuth.tla
+Parsing file D:\python\formalization\output1\ds\03\Qdrant\QCore.tla
+Parsing file C:\Users\27\AppData\Local\Temp\Naturals.tla
+Parsing file C:\Users\27\AppData\Local\Temp\FiniteSets.tla
+Parsing file C:\Users\27\AppData\Local\Temp\Sequences.tla
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module QCore
+Semantic processing of module QAuth
+Semantic processing of module QWrite
+Semantic processing of module QReplica
+Semantic processing of module QMigrate
+Semantic processing of module QSearch
+Semantic processing of module QFrontierInterface
+Semantic processing of module QCfgHelpers
+Semantic processing of module QIntegrated
+Starting... (2026-08-03 22:26:28)
+Computing initial states...
+Computed 2 initial states...
+Computed 4 initial states...
+Finished computing initial states: 6 distinct states generated at 2026-08-03 22:26:29.
+Progress(5) at 2026-08-03 22:26:32: 257,165 states generated (257,165 s/min), 31,324 distinct states found (31,324 ds/min), 25,946 states left on queue.

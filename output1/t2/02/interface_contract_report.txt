@@ -1,0 +1,27 @@
+INTERFACE CONTRACT CHECK: FAIL
+1. QIntegrated.tla must EXTENDS QFrontierInterface.
+2. QFrontierInterface.tla missing interface operator: WriteFrontier
+3. QFrontierInterface.tla missing interface operator: CommitFrontier
+4. QFrontierInterface.tla missing interface operator: ReplicaFrontier
+5. QFrontierInterface.tla missing interface operator: QueryFrontier
+6. QFrontierInterface.tla missing interface operator: MigrateFrontier
+7. QFrontierInterface.tla missing interface operator: SearchFrontier
+8. QFrontierInterface.tla missing interface operator: CommitFrontierSafety
+9. QFrontierInterface.tla missing interface operator: ReplicaFrontierSafety
+10. QFrontierInterface.tla missing interface operator: QueryFrontierSafety
+11. QFrontierInterface.tla missing interface operator: MigrateFrontierSafety
+12. QFrontierInterface.tla missing interface operator: SearchFrontierSafety
+13. QFrontierInterface.tla missing interface operator: SearchResultSafety
+14. QFrontierInterface.tla missing interface operator: FrontierSafety
+15. QIntegrated.tla missing interface operator: GlobalVars
+16. QIntegrated.tla missing interface operator: IntegratedAuthAction
+17. QIntegrated.tla missing interface operator: IntegratedWriteAction
+18. QIntegrated.tla missing interface operator: IntegratedMigrateAction
+19. QIntegrated.tla missing interface operator: IntegratedSearchAction
+20. QIntegrated.tla missing interface operator: Spec
+21. QIntegrated.tla missing interface operator: GlobalTypeInvariant
+22. QIntegrated.tla missing interface operator: AuthSafety
+23. QIntegrated.tla missing interface operator: WalBeforeApply
+24. QIntegrated.tla missing interface operator: ReplicaNotAheadOfWAL
+25. QIntegrated.tla missing interface operator: MigrateSafety
+26. QSearch.tla fixes the successful query result to the empty set.

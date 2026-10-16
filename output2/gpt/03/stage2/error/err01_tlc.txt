@@ -1,0 +1,189 @@
+time=2026-08-09T18:53:42+08:00
+stage=tlc
+model=gpt-5.6-terra
+error_index=1
+
+===== DETAILS =====
+TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
+Running breadth-first search Model-Checking with fp 52 and seed -5908259108874885973 with 1 worker on 8 cores with 1820MB heap and 64MB offheap memory (Windows 10 10.0 amd64, Oracle Corporation 1.8.0_131 x86_64, MSBDiskFPSet, DiskStateQueue).
+Parsing file D:\python\formalization\output2\gpt\03\stage2\Cassandra\CassandraSmoke.tla
+Parsing file D:\python\formalization\output2\gpt\03\stage2\Cassandra\CassandraFrontier.tla
+Parsing file D:\python\formalization\output2\gpt\03\stage2\Cassandra\CassandraCfgHelpers.tla
+Parsing file C:\Users\27\AppData\Local\Temp\Naturals.tla
+Parsing file C:\Users\27\AppData\Local\Temp\FiniteSets.tla
+Parsing file C:\Users\27\AppData\Local\Temp\Sequences.tla
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module CassandraFrontier
+Semantic errors:
+
+*** Errors: 10
+
+line 121, col 12 to line 121, col 25 of module CassandraFrontier
+
+Unknown operator: `activeReplicas'.
+
+
+line 121, col 32 to line 121, col 44 of module CassandraFrontier
+
+Unknown operator: `nodeAvailable'.
+
+
+line 128, col 12 to line 128, col 25 of module CassandraFrontier
+
+Unknown operator: `replicaApplied'.
+
+
+line 136, col 12 to line 136, col 24 of module CassandraFrontier
+
+Unknown operator: `writeFrontier'.
+
+
+line 139, col 47 to line 139, col 60 of module CassandraFrontier
+
+Unknown operator: `replicaApplied'.
+
+
+line 142, col 15 to line 142, col 28 of module CassandraFrontier
+
+Unknown operator: `activeReplicas'.
+
+
+line 142, col 34 to line 142, col 49 of module CassandraFrontier
+
+Unknown operator: `migrateBoundary'.
+
+
+line 150, col 14 to line 150, col 27 of module CassandraFrontier
+
+Unknown operator: `activeReplicas'.
+
+
+line 151, col 11 to line 151, col 23 of module CassandraFrontier
+
+Unknown operator: `migrateState'.
+
+
+line 152, col 17 to line 152, col 31 of module CassandraFrontier
+
+Unknown operator: `plannedReplicas'.
+
+
+
+Semantic processing of module CassandraCfgHelpers
+Semantic errors:
+
+*** Errors: 10
+
+line 121, col 12 to line 121, col 25 of module CassandraFrontier
+
+Unknown operator: `activeReplicas'.
+
+
+line 121, col 32 to line 121, col 44 of module CassandraFrontier
+
+Unknown operator: `nodeAvailable'.
+
+
+line 128, col 12 to line 128, col 25 of module CassandraFrontier
+
+Unknown operator: `replicaApplied'.
+
+
+line 136, col 12 to line 136, col 24 of module CassandraFrontier
+
+Unknown operator: `writeFrontier'.
+
+
+line 139, col 47 to line 139, col 60 of module CassandraFrontier
+
+Unknown operator: `replicaApplied'.
+
+
+line 142, col 15 to line 142, col 28 of module CassandraFrontier
+
+Unknown operator: `activeReplicas'.
+
+
+line 142, col 34 to line 142, col 49 of module CassandraFrontier
+
+Unknown operator: `migrateBoundary'.
+
+
+line 150, col 14 to line 150, col 27 of module CassandraFrontier
+
+Unknown operator: `activeReplicas'.
+
+
+line 151, col 11 to line 151, col 23 of module CassandraFrontier
+
+Unknown operator: `migrateState'.
+
+
+line 152, col 17 to line 152, col 31 of module CassandraFrontier
+
+Unknown operator: `plannedReplicas'.
+
+
+
+Semantic processing of module CassandraSmoke
+Semantic errors:
+
+*** Errors: 10
+
+line 121, col 12 to line 121, col 25 of module CassandraFrontier
+
+Unknown operator: `activeReplicas'.
+
+
+line 121, col 32 to line 121, col 44 of module CassandraFrontier
+
+Unknown operator: `nodeAvailable'.
+
+
+line 128, col 12 to line 128, col 25 of module CassandraFrontier
+
+Unknown operator: `replicaApplied'.
+
+
+line 136, col 12 to line 136, col 24 of module CassandraFrontier
+
+Unknown operator: `writeFrontier'.
+
+
+line 139, col 47 to line 139, col 60 of module CassandraFrontier
+
+Unknown operator: `replicaApplied'.
+
+
+line 142, col 15 to line 142, col 28 of module CassandraFrontier
+
+Unknown operator: `activeReplicas'.
+
+
+line 142, col 34 to line 142, col 49 of module CassandraFrontier
+
+Unknown operator: `migrateBoundary'.
+
+
+line 150, col 14 to line 150, col 27 of module CassandraFrontier
+
+Unknown operator: `activeReplicas'.
+
+
+line 151, col 11 to line 151, col 23 of module CassandraFrontier
+
+Unknown operator: `migrateState'.
+
+
+line 152, col 17 to line 152, col 31 of module CassandraFrontier
+
+Unknown operator: `plannedReplicas'.
+
+
+
+Starting... (2026-08-09 18:53:42)
+Error: Parsing or semantic analysis failed.
+Finished in 00s at (2026-08-09 18:53:42)
+

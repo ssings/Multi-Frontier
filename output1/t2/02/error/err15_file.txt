@@ -1,0 +1,7 @@
+time=2026-08-04T19:35:02+08:00
+stage=file
+model=deepseek-v4-pro
+error_index=15
+
+===== DETAILS =====
+Missing ==== at the end of the module: QIntegrated.tla

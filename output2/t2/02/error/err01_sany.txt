@@ -1,0 +1,76 @@
+time=2026-08-04T21:35:09+08:00
+stage=sany
+model=deepseek-v4-pro
+error_index=1
+
+===== DETAILS =====
+===== MODULE: CCore.tla; RETURN CODE: 0 =====
+
+****** SANY2 Version 2.1 created 24 February 2014
+
+Parsing file D:\python\formalization\output2\t2\02\Cassandra\CCore.tla
+Parsing file C:\Users\27\AppData\Local\Temp\Naturals.tla
+Parsing file C:\Users\27\AppData\Local\Temp\FiniteSets.tla
+Parsing file C:\Users\27\AppData\Local\Temp\Sequences.tla
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module CCore
+
+===== MODULE: CAuth.tla; RETURN CODE: 0 =====
+
+****** SANY2 Version 2.1 created 24 February 2014
+
+Parsing file D:\python\formalization\output2\t2\02\Cassandra\CAuth.tla
+Parsing file D:\python\formalization\output2\t2\02\Cassandra\CCore.tla
+Parsing file C:\Users\27\AppData\Local\Temp\Naturals.tla
+Parsing file C:\Users\27\AppData\Local\Temp\FiniteSets.tla
+Parsing file C:\Users\27\AppData\Local\Temp\Sequences.tla
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module CCore
+Semantic processing of module CAuth
+
+===== MODULE: CCfgHelpers.tla; RETURN CODE: 0 =====
+
+****** SANY2 Version 2.1 created 24 February 2014
+
+Parsing file D:\python\formalization\output2\t2\02\Cassandra\CCfgHelpers.tla
+Parsing file D:\python\formalization\output2\t2\02\Cassandra\CCore.tla
+Parsing file C:\Users\27\AppData\Local\Temp\Naturals.tla
+Parsing file C:\Users\27\AppData\Local\Temp\FiniteSets.tla
+Parsing file C:\Users\27\AppData\Local\Temp\Sequences.tla
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module CCore
+Semantic processing of module CCfgHelpers
+
+===== MODULE: CWrite.tla; RETURN CODE: 4294967295 =====
+
+****** SANY2 Version 2.1 created 24 February 2014
+
+Parsing file D:\python\formalization\output2\t2\02\Cassandra\CWrite.tla
+***Parse Error***
+Item at line 35, col 5 to line 35, col 5 of module CWrite is not properly indented inside conjunction or  disjunction list item at line 30, col 5 to line 35, col 5 of module CWrite
+
+Residual stack trace follows:
+AND-OR Junction starting at line 24, column 5.
+ExtendableExpr starting at line 24, column 5.
+Expression starting at line 24, column 5.
+Definition starting at line 23, column 1.
+Module body starting at line 5, column 1.
+
+
+Fatal errors while parsing TLA+ spec in file CWrite.tla
+
+tla2sany.semantic.AbortException
+*** Abort messages: 1
+
+In module CWrite
+
+Could not parse module CWrite from file CWrite.tla
+
+
+

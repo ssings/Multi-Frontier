@@ -1,0 +1,89 @@
+time=2026-08-03T22:20:37+08:00
+stage=sany
+model=deepseek-v4-pro
+error_index=3
+
+===== DETAILS =====
+===== COMMAND =====
+java -Xmx2g -cp D:\python\formalization\docs\tla2tools.jar tla2sany.SANY QCore.tla
+===== MODULE: QCore.tla; RETURN CODE: 0 =====
+
+****** SANY2 Version 2.1 created 24 February 2014
+
+Parsing file D:\python\formalization\output1\ds\03\Qdrant\QCore.tla
+Parsing file C:\Users\27\AppData\Local\Temp\Naturals.tla
+Parsing file C:\Users\27\AppData\Local\Temp\FiniteSets.tla
+Parsing file C:\Users\27\AppData\Local\Temp\Sequences.tla
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module QCore
+
+
+===== COMMAND =====
+java -Xmx2g -cp D:\python\formalization\docs\tla2tools.jar tla2sany.SANY QAuth.tla
+===== MODULE: QAuth.tla; RETURN CODE: 0 =====
+
+****** SANY2 Version 2.1 created 24 February 2014
+
+Parsing file D:\python\formalization\output1\ds\03\Qdrant\QAuth.tla
+Parsing file D:\python\formalization\output1\ds\03\Qdrant\QCore.tla
+Parsing file C:\Users\27\AppData\Local\Temp\Naturals.tla
+Parsing file C:\Users\27\AppData\Local\Temp\FiniteSets.tla
+Parsing file C:\Users\27\AppData\Local\Temp\Sequences.tla
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module QCore
+Semantic processing of module QAuth
+
+
+===== COMMAND =====
+java -Xmx2g -cp D:\python\formalization\docs\tla2tools.jar tla2sany.SANY QWrite.tla
+===== MODULE: QWrite.tla; RETURN CODE: 0 =====
+
+****** SANY2 Version 2.1 created 24 February 2014
+
+Parsing file D:\python\formalization\output1\ds\03\Qdrant\QWrite.tla
+Parsing file D:\python\formalization\output1\ds\03\Qdrant\QAuth.tla
+Parsing file D:\python\formalization\output1\ds\03\Qdrant\QCore.tla
+Parsing file C:\Users\27\AppData\Local\Temp\Naturals.tla
+Parsing file C:\Users\27\AppData\Local\Temp\FiniteSets.tla
+Parsing file C:\Users\27\AppData\Local\Temp\Sequences.tla
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module QCore
+Semantic processing of module QAuth
+Semantic processing of module QWrite
+
+
+===== COMMAND =====
+java -Xmx2g -cp D:\python\formalization\docs\tla2tools.jar tla2sany.SANY QReplica.tla
+===== MODULE: QReplica.tla; RETURN CODE: 4294967295 =====
+
+****** SANY2 Version 2.1 created 24 February 2014
+
+Parsing file D:\python\formalization\output1\ds\03\Qdrant\QReplica.tla
+***Parse Error***
+Was expecting "Identifier Declaration, prefix op or _"
+Encountered ""One"" at line 10, column 13 and token "," 
+
+Residual stack trace follows:
+Identifier LHS starting at line 10, column 1.
+Definition starting at line 10, column 1.
+Module body starting at line 6, column 1.
+Module definition starting at line 1, column 1.
+
+
+Fatal errors while parsing TLA+ spec in file QReplica.tla
+
+tla2sany.semantic.AbortException
+*** Abort messages: 1
+
+In module QReplica
+
+Could not parse module QReplica from file QReplica.tla
+
+
+

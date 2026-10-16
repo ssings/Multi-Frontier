@@ -1,0 +1,2 @@
+INTERFACE CONTRACT CHECK: FAIL
+1. QSearch.tla fixes successful query results to the empty set.

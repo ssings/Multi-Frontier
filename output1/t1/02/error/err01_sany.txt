@@ -1,0 +1,32 @@
+time=2026-08-04T18:38:20+08:00
+stage=sany
+model=deepseek-v4-pro
+error_index=1
+
+===== DETAILS =====
+===== COMMAND =====
+java -Xmx2g -cp D:\python\formalization\docs\tla2tools.jar tla2sany.SANY QCore.tla
+===== MODULE: QCore.tla; RETURN CODE: 0 =====
+
+****** SANY2 Version 2.1 created 24 February 2014
+
+Parsing file D:\python\formalization\output1\t1\02\Qdrant\QCore.tla
+Parsing file C:\Users\27\AppData\Local\Temp\Naturals.tla
+Semantic processing of module Naturals
+Semantic processing of module QCore
+Semantic errors:
+
+*** Errors: 2
+
+line 33, col 9 to line 33, col 19 of module QCore
+
+Unknown operator: `Cardinality'.
+
+
+line 33, col 30 to line 33, col 40 of module QCore
+
+Unknown operator: `Cardinality'.
+
+
+
+

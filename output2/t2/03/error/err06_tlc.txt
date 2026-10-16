@@ -1,0 +1,76 @@
+time=2026-08-04T21:58:42+08:00
+stage=tlc
+model=deepseek-v4-pro
+error_index=6
+
+===== DETAILS =====
+TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
+Running breadth-first search Model-Checking with fp 11 and seed -3697483004321066643 with 1 worker on 8 cores with 1820MB heap and 64MB offheap memory (Windows 10 10.0 amd64, Oracle Corporation 1.8.0_131 x86_64, MSBDiskFPSet, DiskStateQueue).
+Parsing file D:\python\formalization\output2\t2\03\Cassandra\CIntegrated.tla
+Parsing file D:\python\formalization\output2\t2\03\Cassandra\CFrontierInterface.tla
+Parsing file D:\python\formalization\output2\t2\03\Cassandra\CHelpers.tla
+Parsing file D:\python\formalization\output2\t2\03\Cassandra\CMigrate.tla
+Parsing file D:\python\formalization\output2\t2\03\Cassandra\CQuery.tla
+Parsing file D:\python\formalization\output2\t2\03\Cassandra\CReplica.tla
+Parsing file D:\python\formalization\output2\t2\03\Cassandra\CWrite.tla
+Parsing file D:\python\formalization\output2\t2\03\Cassandra\CAuth.tla
+Parsing file D:\python\formalization\output2\t2\03\Cassandra\CCore.tla
+Parsing file C:\Users\27\AppData\Local\Temp\Naturals.tla
+Parsing file C:\Users\27\AppData\Local\Temp\FiniteSets.tla
+Parsing file C:\Users\27\AppData\Local\Temp\Sequences.tla
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module CCore
+Semantic processing of module CAuth
+Semantic processing of module CWrite
+Semantic processing of module CReplica
+Semantic processing of module CQuery
+Semantic processing of module CMigrate
+Semantic errors:
+
+*** Errors: 1
+
+line 62, col 61 to line 62, col 62 of module CMigrate
+
+Unknown operator: `sh'.
+
+
+
+Semantic processing of module CFrontierInterface
+Semantic errors:
+
+*** Errors: 1
+
+line 62, col 61 to line 62, col 62 of module CMigrate
+
+Unknown operator: `sh'.
+
+
+
+Semantic processing of module CHelpers
+Semantic errors:
+
+*** Errors: 1
+
+line 62, col 61 to line 62, col 62 of module CMigrate
+
+Unknown operator: `sh'.
+
+
+
+Semantic processing of module CIntegrated
+Semantic errors:
+
+*** Errors: 1
+
+line 62, col 61 to line 62, col 62 of module CMigrate
+
+Unknown operator: `sh'.
+
+
+
+Starting... (2026-08-04 21:58:42)
+Error: Parsing or semantic analysis failed.
+Finished in 00s at (2026-08-04 21:58:42)
+

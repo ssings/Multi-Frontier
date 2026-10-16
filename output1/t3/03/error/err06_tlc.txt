@@ -1,0 +1,42 @@
+time=2026-08-03T22:23:44+08:00
+stage=tlc
+model=deepseek-v4-pro
+error_index=6
+
+===== DETAILS =====
+===== COMMAND =====
+java -Xmx2g -cp D:\python\formalization\docs\tla2tools.jar tlc2.TLC -workers 1 -config D:\python\formalization\output1\Qdrant.cfg QIntegrated.tla
+===== RETURN CODE: 76; TIMED OUT: False =====
+TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
+Running breadth-first search Model-Checking with fp 4 and seed 5118862647684411148 with 1 worker on 8 cores with 1820MB heap and 64MB offheap memory (Windows 10 10.0 amd64, Oracle Corporation 1.8.0_131 x86_64, MSBDiskFPSet, DiskStateQueue).
+Parsing file D:\python\formalization\output1\ds\03\Qdrant\QIntegrated.tla
+Parsing file D:\python\formalization\output1\ds\03\Qdrant\QFrontierInterface.tla
+Parsing file D:\python\formalization\output1\ds\03\Qdrant\QCfgHelpers.tla
+Parsing file D:\python\formalization\output1\ds\03\Qdrant\QSearch.tla
+Parsing file D:\python\formalization\output1\ds\03\Qdrant\QMigrate.tla
+Parsing file D:\python\formalization\output1\ds\03\Qdrant\QReplica.tla
+Parsing file D:\python\formalization\output1\ds\03\Qdrant\QWrite.tla
+Parsing file D:\python\formalization\output1\ds\03\Qdrant\QAuth.tla
+Parsing file D:\python\formalization\output1\ds\03\Qdrant\QCore.tla
+Parsing file C:\Users\27\AppData\Local\Temp\Naturals.tla
+Parsing file C:\Users\27\AppData\Local\Temp\FiniteSets.tla
+Parsing file C:\Users\27\AppData\Local\Temp\Sequences.tla
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module QCore
+Semantic processing of module QAuth
+Semantic processing of module QWrite
+Semantic processing of module QReplica
+Semantic processing of module QMigrate
+Semantic processing of module QSearch
+Semantic processing of module QFrontierInterface
+Semantic processing of module QCfgHelpers
+Semantic processing of module QIntegrated
+Starting... (2026-08-03 22:23:44)
+Error: The invariant MigrateSafety is not a state predicate (one with no primes or temporal operators).
+Note that a bug can cause TLC to incorrectly report this error.
+If you believe your TLA+ or PlusCal specification to be correct,
+please check if this bug described in LevelNode.java starting at line 590ff affects you.
+Finished in 00s at (2026-08-03 22:23:44)
+

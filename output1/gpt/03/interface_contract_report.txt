@@ -1,0 +1,8 @@
+INTERFACE CONTRACT CHECK: FAIL
+1. QFrontierInterface.tla is missing interface operator: CommitFrontierSafety
+2. QFrontierInterface.tla is missing interface operator: ReplicaFrontierSafety
+3. QFrontierInterface.tla is missing interface operator: QueryFrontierSafety
+4. QFrontierInterface.tla is missing interface operator: MigrateFrontierSafety
+5. QFrontierInterface.tla is missing interface operator: SearchFrontierSafety
+6. QFrontierInterface.tla is missing interface operator: SearchResultSafety
+7. QSearch.tla fixes successful query results to the empty set.

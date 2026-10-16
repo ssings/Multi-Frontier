@@ -1,0 +1,97 @@
+model_family=ds
+time=2026-08-03T21:03:04+08:00
+stage=tlc
+model=deepseek-v4-pro
+
+===== ERROR DETAILS =====
+===== COMMAND =====
+java -Xmx2g -cp D:\python\formalization\docs\tla2tools.jar tlc2.TLC -workers 1 -config D:\python\formalization\output1\Qdrant.cfg QIntegrated.tla
+===== RETURN CODE: 75; TIMED OUT: False =====
+TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
+Running breadth-first search Model-Checking with fp 75 and seed 1425802429611308586 with 1 worker on 8 cores with 1820MB heap and 64MB offheap memory (Windows 10 10.0 amd64, Oracle Corporation 1.8.0_131 x86_64, MSBDiskFPSet, DiskStateQueue).
+Parsing file D:\python\formalization\output1\ds\01\Qdrant\QIntegrated.tla
+Parsing file D:\python\formalization\output1\ds\01\Qdrant\QFrontierInterface.tla
+Parsing file D:\python\formalization\output1\ds\01\Qdrant\QCfgHelpers.tla
+Parsing file D:\python\formalization\output1\ds\01\Qdrant\QSearch.tla
+Parsing file D:\python\formalization\output1\ds\01\Qdrant\QMigrate.tla
+Parsing file D:\python\formalization\output1\ds\01\Qdrant\QReplica.tla
+Parsing file D:\python\formalization\output1\ds\01\Qdrant\QWrite.tla
+Parsing file D:\python\formalization\output1\ds\01\Qdrant\QAuth.tla
+Parsing file D:\python\formalization\output1\ds\01\Qdrant\QCore.tla
+Parsing file C:\Users\27\AppData\Local\Temp\Naturals.tla
+Parsing file C:\Users\27\AppData\Local\Temp\FiniteSets.tla
+Parsing file C:\Users\27\AppData\Local\Temp\Sequences.tla
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module QCore
+Semantic processing of module QAuth
+Semantic processing of module QWrite
+Semantic processing of module QReplica
+Semantic processing of module QMigrate
+Semantic processing of module QSearch
+Semantic processing of module QFrontierInterface
+Semantic processing of module QCfgHelpers
+Semantic processing of module QIntegrated
+Starting... (2026-08-03 21:03:03)
+Computing initial states...
+Finished computing initial states: 1 distinct state generated at 2026-08-03 21:03:04.
+Error: Successor state is not completely specified by action GrantPermission of the next-state relation. The following variables are not assigned: ackSet, applied, copiedData, lastSearch, lastMigrate, lastWrite, replicaHas, searchResult, shardData, shardLocation, shardOwner, migrateDst, migrateSrc, migrateState, wal, writeState.
+
+Error: The behavior up to this point is:
+State 1: <Initial predicate>
+/\ lastSearch = [ level |-> "One",
+  kind |-> "None",
+  principal |-> P1,
+  collection |-> C1,
+  result |-> {},
+  authorized |-> FALSE,
+  executed |-> FALSE ]
+/\ migrateState = (S1 :> "Stable")
+/\ replicaHas = (R1 :> {} @@ R2 :> {} @@ R3 :> {})
+/\ copiedData = (S1 :> {})
+/\ lastMigrate = [ kind |-> "None",
+  principal |-> P1,
+  authorized |-> FALSE,
+  shard |-> S1,
+  phase |-> "Start" ]
+/\ lastWrite = [ kind |-> "None",
+  principal |-> P1,
+  collection |-> C1,
+  authorized |-> FALSE,
+  point |-> PT1 ]
+/\ permission = (P1 :> (C1 :> {"Read", "Write", "Manage", "Migrate"}) @@ P2 :> (C1 :> {}))
+/\ shardOwner = (S1 :> N1)
+/\ writeState = (PT1 :> "None" @@ PT2 :> "None")
+/\ migrateDst = (S1 :> N1)
+/\ applied = {}
+/\ shardLocation = (S1 :> {N1})
+/\ searchResult = {}
+/\ ackSet = (PT1 :> {} @@ PT2 :> {})
+/\ shardData = (S1 :> {})
+/\ wal = {}
+/\ migrateSrc = (S1 :> N1)
+
+State 2: <GrantPermission line 23, col 5 to line 29, col 56 of module QAuth>
+/\ lastSearch = null
+/\ migrateState = null
+/\ replicaHas = null
+/\ copiedData = null
+/\ lastMigrate = null
+/\ lastWrite = null
+/\ permission = (P1 :> (C1 :> {"Read", "Write", "Manage", "Migrate"}) @@ P2 :> (C1 :> {}))
+/\ shardOwner = null
+/\ writeState = null
+/\ migrateDst = null
+/\ applied = null
+/\ shardLocation = null
+/\ searchResult = null
+/\ ackSet = null
+/\ shardData = null
+/\ wal = null
+/\ migrateSrc = null
+
+2 states generated, 1 distinct states found, 0 states left on queue.
+The depth of the complete state graph search is 1.
+Finished in 01s at (2026-08-03 21:03:04)
+

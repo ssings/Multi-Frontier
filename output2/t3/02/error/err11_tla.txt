@@ -1,0 +1,7 @@
+time=2026-08-04T23:01:49+08:00
+stage=tla
+model=deepseek-v4-pro
+error_index=11
+
+===== DETAILS =====
+CCfgHelpers.tla does not end with ====

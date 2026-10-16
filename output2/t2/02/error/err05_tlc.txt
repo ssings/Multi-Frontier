@@ -1,0 +1,77 @@
+time=2026-08-04T21:39:34+08:00
+stage=tlc
+model=deepseek-v4-pro
+error_index=5
+
+===== DETAILS =====
+TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
+Running breadth-first search Model-Checking with fp 92 and seed 1011273722818495137 with 1 worker on 8 cores with 1820MB heap and 64MB offheap memory (Windows 10 10.0 amd64, Oracle Corporation 1.8.0_131 x86_64, MSBDiskFPSet, DiskStateQueue).
+Parsing file D:\python\formalization\output2\t2\02\Cassandra\CIntegrated.tla
+Parsing file D:\python\formalization\output2\t2\02\Cassandra\CFrontierInterface.tla
+Parsing file D:\python\formalization\output2\t2\02\Cassandra\CCfgHelpers.tla
+Parsing file D:\python\formalization\output2\t2\02\Cassandra\CRead.tla
+Parsing file D:\python\formalization\output2\t2\02\Cassandra\CMigrate.tla
+Parsing file D:\python\formalization\output2\t2\02\Cassandra\CReplica.tla
+Parsing file D:\python\formalization\output2\t2\02\Cassandra\CWrite.tla
+Parsing file D:\python\formalization\output2\t2\02\Cassandra\CAuth.tla
+Parsing file D:\python\formalization\output2\t2\02\Cassandra\CCore.tla
+Parsing file C:\Users\27\AppData\Local\Temp\Naturals.tla
+Parsing file C:\Users\27\AppData\Local\Temp\FiniteSets.tla
+Parsing file C:\Users\27\AppData\Local\Temp\Sequences.tla
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module CCore
+Semantic processing of module CAuth
+Semantic processing of module CWrite
+Semantic processing of module CReplica
+Semantic processing of module CMigrate
+Semantic processing of module CRead
+Semantic processing of module CFrontierInterface
+Semantic processing of module CCfgHelpers
+Semantic processing of module CIntegrated
+Starting... (2026-08-04 21:39:33)
+Computing initial states...
+Computed 2 initial states...
+Finished computing initial states: 3 distinct states generated at 2026-08-04 21:39:34.
+Error: TLC threw an unexpected exception.
+This was probably caused by an error in the spec or model.
+See the User Output or TLC Console for clues to what happened.
+The exception was a java.lang.RuntimeException
+: TLC attempted to evaluate an unbounded \E.
+Make sure that the expression is of form \E x \in S: P(x).
+line 101, col 8 to line 101, col 56 of module CIntegrated
+Error: The behavior up to this point is:
+State 1: <Initial predicate>
+/\ migrateState = (P1 :> "Stable")
+/\ replicaHas = (Rep1 :> {} @@ Rep2 :> {} @@ Rep3 :> {})
+/\ copiedData = (P1 :> {})
+/\ lastMigrate = [partition |-> P1, authorized |-> FALSE, kind |-> "None", principal |-> Alice]
+/\ lastWrite = [authorized |-> FALSE, kind |-> "None", principal |-> Alice, record |-> R1]
+/\ permission = (Alice :> (KS1 :> {}) @@ Bob :> (KS1 :> {}))
+/\ shardOwner = (P1 :> N1)
+/\ writeState = (R1 :> "None" @@ R2 :> "None")
+/\ migrateDst = (P1 :> N1)
+/\ applied = {}
+/\ shardLocation = (P1 :> {N1, N2, N3})
+/\ ackSet = (R1 :> {} @@ R2 :> {})
+/\ lastRead = [ level |-> "One",
+  authorized |-> FALSE,
+  kind |-> "None",
+  principal |-> Alice,
+  keyspace |-> KS1,
+  result |-> {},
+  executed |-> FALSE ]
+/\ shardData = (P1 :> {})
+/\ wal = {}
+/\ readResult = {}
+/\ migrateSrc = (P1 :> N1)
+
+Error: The error occurred when TLC was evaluating the nested
+expressions at the following positions:
+0. Line 101, column 8 to line 101, column 56 in CIntegrated
+
+
+3 states generated, 3 distinct states found, 2 states left on queue.
+Finished in 01s at (2026-08-04 21:39:34)
+

@@ -1,0 +1,33 @@
+INTERFACE CONTRACT CHECK: FAIL
+1. QIntegrated.tla must EXTENDS QFrontierInterface.
+2. QIntegrated.tla must EXTENDS QCfgHelpers.
+3. QFrontierInterface.tla missing interface operator: WriteFrontier
+4. QFrontierInterface.tla missing interface operator: CommitFrontier
+5. QFrontierInterface.tla missing interface operator: ReplicaFrontier
+6. QFrontierInterface.tla missing interface operator: QueryFrontier
+7. QFrontierInterface.tla missing interface operator: MigrateFrontier
+8. QFrontierInterface.tla missing interface operator: SearchFrontier
+9. QFrontierInterface.tla missing interface operator: CommitFrontierSafety
+10. QFrontierInterface.tla missing interface operator: ReplicaFrontierSafety
+11. QFrontierInterface.tla missing interface operator: QueryFrontierSafety
+12. QFrontierInterface.tla missing interface operator: MigrateFrontierSafety
+13. QFrontierInterface.tla missing interface operator: SearchFrontierSafety
+14. QFrontierInterface.tla missing interface operator: SearchResultSafety
+15. QFrontierInterface.tla missing interface operator: FrontierSafety
+16. QIntegrated.tla missing interface operator: GlobalVars
+17. QIntegrated.tla missing interface operator: IntegratedAuthAction
+18. QIntegrated.tla missing interface operator: IntegratedWriteAction
+19. QIntegrated.tla missing interface operator: IntegratedMigrateAction
+20. QIntegrated.tla missing interface operator: IntegratedSearchAction
+21. QIntegrated.tla missing interface operator: Spec
+22. QIntegrated.tla missing interface operator: GlobalTypeInvariant
+23. QIntegrated.tla missing interface operator: AuthSafety
+24. QIntegrated.tla missing interface operator: WalBeforeApply
+25. QIntegrated.tla missing interface operator: ReplicaNotAheadOfWAL
+26. QIntegrated.tla lacks interface operator: MigrateSafety
+27. The invariant referenced by Qdrant.cfg does not exist: GlobalTypeInvariant
+28. The invariant referenced by Qdrant.cfg does not exist: AuthSafety
+29. The invariant referenced by Qdrant.cfg does not exist: WalBeforeApply
+30. The invariant referenced by Qdrant.cfg does not exist: ReplicaNotAheadOfWAL
+31. The invariant referenced by Qdrant.cfg does not exist: FrontierSafety
+32. QSearch.tla fixes successful query results to the empty set.

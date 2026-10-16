@@ -1,0 +1,105 @@
+time=2026-08-04T22:29:44+08:00
+stage=tlc
+model=deepseek-v4-pro
+error_index=2
+
+===== DETAILS =====
+TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
+Running breadth-first search Model-Checking with fp 114 and seed -8430523849109520124 with 1 worker on 8 cores with 1820MB heap and 64MB offheap memory (Windows 10 10.0 amd64, Oracle Corporation 1.8.0_131 x86_64, MSBDiskFPSet, DiskStateQueue).
+Parsing file D:\python\formalization\output2\t3\01\Cassandra\CIntegrated.tla
+Parsing file D:\python\formalization\output2\t3\01\Cassandra\CFrontierInterface.tla
+Parsing file D:\python\formalization\output2\t3\01\Cassandra\CassandraCfgHelpers.tla
+Parsing file D:\python\formalization\output2\t3\01\Cassandra\CQuery.tla
+Parsing file D:\python\formalization\output2\t3\01\Cassandra\CMigrate.tla
+Parsing file D:\python\formalization\output2\t3\01\Cassandra\CReplica.tla
+Parsing file D:\python\formalization\output2\t3\01\Cassandra\CWrite.tla
+Parsing file D:\python\formalization\output2\t3\01\Cassandra\CAuth.tla
+Parsing file D:\python\formalization\output2\t3\01\Cassandra\CCore.tla
+Parsing file C:\Users\27\AppData\Local\Temp\Naturals.tla
+Parsing file C:\Users\27\AppData\Local\Temp\FiniteSets.tla
+Parsing file C:\Users\27\AppData\Local\Temp\Sequences.tla
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module CCore
+Semantic processing of module CAuth
+Semantic processing of module CWrite
+Semantic processing of module CReplica
+Semantic processing of module CMigrate
+Semantic processing of module CQuery
+Semantic processing of module CFrontierInterface
+Semantic processing of module CassandraCfgHelpers
+Semantic processing of module CIntegrated
+Starting... (2026-08-04 22:29:43)
+Computing initial states...
+Finished computing initial states: 1 distinct state generated at 2026-08-04 22:29:43.
+Error: Invariant IntegratedSafety is violated.
+Error: The behavior up to this point is:
+State 1: <Initial predicate>
+/\ writeLevel = (D1 :> "ONE" @@ D2 :> "ONE")
+/\ ackCount = (D1 :> 0 @@ D2 :> 0)
+/\ migrateState = (TR1 :> "Stable")
+/\ replicaHas = (Node1 :> {} @@ Node2 :> {} @@ Node3 :> {})
+/\ copiedData = (TR1 :> {})
+/\ lastMigrate = [ kind |-> "None",
+  authorized |-> FALSE,
+  principal |-> Alice,
+  keyspace |-> KS1,
+  tokenRange |-> TR1,
+  phase |-> "Start" ]
+/\ lastWrite = [ kind |-> "None",
+  authorized |-> FALSE,
+  principal |-> Alice,
+  keyspace |-> KS1,
+  dataItem |-> D1,
+  accepted |-> FALSE ]
+/\ permission = (Alice :> (KS1 :> {}) @@ Bob :> (KS1 :> {}))
+/\ migrateDst = (TR1 :> {})
+/\ committed = {}
+/\ lastQuery = [ kind |-> "None",
+  authorized |-> FALSE,
+  result |-> {},
+  principal |-> Alice,
+  keyspace |-> KS1,
+  level |-> "ONE",
+  executed |-> FALSE ]
+/\ writeRequested = {}
+/\ migrateSrc = (TR1 :> {})
+/\ currentReplicas = (TR1 :> {Node1, Node2, Node3})
+
+State 2: <DoRejectWrite line 32, col 5 to line 33, col 89 of module CIntegrated>
+/\ writeLevel = (D1 :> "ONE" @@ D2 :> "ONE")
+/\ ackCount = (D1 :> 0 @@ D2 :> 0)
+/\ migrateState = (TR1 :> "Stable")
+/\ replicaHas = (Node1 :> {} @@ Node2 :> {} @@ Node3 :> {})
+/\ copiedData = (TR1 :> {})
+/\ lastMigrate = [ kind |-> "None",
+  authorized |-> FALSE,
+  principal |-> Alice,
+  keyspace |-> KS1,
+  tokenRange |-> TR1,
+  phase |-> "Start" ]
+/\ lastWrite = [ kind |-> "Some",
+  authorized |-> FALSE,
+  principal |-> Alice,
+  keyspace |-> KS1,
+  dataItem |-> D1,
+  accepted |-> FALSE ]
+/\ permission = (Alice :> (KS1 :> {}) @@ Bob :> (KS1 :> {}))
+/\ migrateDst = (TR1 :> {})
+/\ committed = {}
+/\ lastQuery = [ kind |-> "None",
+  authorized |-> FALSE,
+  result |-> {},
+  principal |-> Alice,
+  keyspace |-> KS1,
+  level |-> "ONE",
+  executed |-> FALSE ]
+/\ writeRequested = {}
+/\ migrateSrc = (TR1 :> {})
+/\ currentReplicas = (TR1 :> {Node1, Node2, Node3})
+
+2 states generated, 2 distinct states found, 0 states left on queue.
+The depth of the complete state graph search is 2.
+Finished in 00s at (2026-08-04 22:29:44)
+

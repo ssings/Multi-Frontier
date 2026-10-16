@@ -1,0 +1,160 @@
+time=2026-08-04T20:01:46+08:00
+stage=sany
+model=deepseek-v4-pro
+error_index=4
+
+===== DETAILS =====
+===== COMMAND =====
+java -Xmx2g -cp D:\python\formalization\docs\tla2tools.jar tla2sany.SANY QCore.tla
+===== MODULE: QCore.tla; RETURN CODE: 0 =====
+
+****** SANY2 Version 2.1 created 24 February 2014
+
+Parsing file D:\python\formalization\output1\t2\03\Qdrant\QCore.tla
+Parsing file C:\Users\27\AppData\Local\Temp\Naturals.tla
+Parsing file C:\Users\27\AppData\Local\Temp\FiniteSets.tla
+Parsing file C:\Users\27\AppData\Local\Temp\Sequences.tla
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module QCore
+
+
+===== COMMAND =====
+java -Xmx2g -cp D:\python\formalization\docs\tla2tools.jar tla2sany.SANY QAuth.tla
+===== MODULE: QAuth.tla; RETURN CODE: 0 =====
+
+****** SANY2 Version 2.1 created 24 February 2014
+
+Parsing file D:\python\formalization\output1\t2\03\Qdrant\QAuth.tla
+Parsing file D:\python\formalization\output1\t2\03\Qdrant\QCore.tla
+Parsing file C:\Users\27\AppData\Local\Temp\Naturals.tla
+Parsing file C:\Users\27\AppData\Local\Temp\FiniteSets.tla
+Parsing file C:\Users\27\AppData\Local\Temp\Sequences.tla
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module QCore
+Semantic processing of module QAuth
+
+
+===== COMMAND =====
+java -Xmx2g -cp D:\python\formalization\docs\tla2tools.jar tla2sany.SANY QWrite.tla
+===== MODULE: QWrite.tla; RETURN CODE: 0 =====
+
+****** SANY2 Version 2.1 created 24 February 2014
+
+Parsing file D:\python\formalization\output1\t2\03\Qdrant\QWrite.tla
+Parsing file D:\python\formalization\output1\t2\03\Qdrant\QAuth.tla
+Parsing file D:\python\formalization\output1\t2\03\Qdrant\QCore.tla
+Parsing file C:\Users\27\AppData\Local\Temp\Naturals.tla
+Parsing file C:\Users\27\AppData\Local\Temp\FiniteSets.tla
+Parsing file C:\Users\27\AppData\Local\Temp\Sequences.tla
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module QCore
+Semantic processing of module QAuth
+Semantic processing of module QWrite
+
+
+===== COMMAND =====
+java -Xmx2g -cp D:\python\formalization\docs\tla2tools.jar tla2sany.SANY QReplica.tla
+===== MODULE: QReplica.tla; RETURN CODE: 0 =====
+
+****** SANY2 Version 2.1 created 24 February 2014
+
+Parsing file D:\python\formalization\output1\t2\03\Qdrant\QReplica.tla
+Parsing file D:\python\formalization\output1\t2\03\Qdrant\QWrite.tla
+Parsing file D:\python\formalization\output1\t2\03\Qdrant\QAuth.tla
+Parsing file D:\python\formalization\output1\t2\03\Qdrant\QCore.tla
+Parsing file C:\Users\27\AppData\Local\Temp\Naturals.tla
+Parsing file C:\Users\27\AppData\Local\Temp\FiniteSets.tla
+Parsing file C:\Users\27\AppData\Local\Temp\Sequences.tla
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module QCore
+Semantic processing of module QAuth
+Semantic processing of module QWrite
+Semantic processing of module QReplica
+
+
+===== COMMAND =====
+java -Xmx2g -cp D:\python\formalization\docs\tla2tools.jar tla2sany.SANY QMigrate.tla
+===== MODULE: QMigrate.tla; RETURN CODE: 0 =====
+
+****** SANY2 Version 2.1 created 24 February 2014
+
+Parsing file D:\python\formalization\output1\t2\03\Qdrant\QMigrate.tla
+Parsing file D:\python\formalization\output1\t2\03\Qdrant\QReplica.tla
+Parsing file D:\python\formalization\output1\t2\03\Qdrant\QWrite.tla
+Parsing file D:\python\formalization\output1\t2\03\Qdrant\QAuth.tla
+Parsing file D:\python\formalization\output1\t2\03\Qdrant\QCore.tla
+Parsing file C:\Users\27\AppData\Local\Temp\Naturals.tla
+Parsing file C:\Users\27\AppData\Local\Temp\FiniteSets.tla
+Parsing file C:\Users\27\AppData\Local\Temp\Sequences.tla
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module QCore
+Semantic processing of module QAuth
+Semantic processing of module QWrite
+Semantic processing of module QReplica
+Semantic processing of module QMigrate
+Semantic errors:
+
+*** Errors: 10
+
+line 52, col 100 to line 52, col 111 of module QMigrate
+
+Unknown operator: `searchResult'.
+
+
+line 52, col 114 to line 52, col 123 of module QMigrate
+
+Unknown operator: `lastSearch'.
+
+
+line 65, col 100 to line 65, col 111 of module QMigrate
+
+Unknown operator: `searchResult'.
+
+
+line 65, col 114 to line 65, col 123 of module QMigrate
+
+Unknown operator: `lastSearch'.
+
+
+line 82, col 100 to line 82, col 111 of module QMigrate
+
+Unknown operator: `searchResult'.
+
+
+line 82, col 114 to line 82, col 123 of module QMigrate
+
+Unknown operator: `lastSearch'.
+
+
+line 101, col 89 to line 101, col 100 of module QMigrate
+
+Unknown operator: `searchResult'.
+
+
+line 101, col 103 to line 101, col 112 of module QMigrate
+
+Unknown operator: `lastSearch'.
+
+
+line 119, col 89 to line 119, col 100 of module QMigrate
+
+Unknown operator: `searchResult'.
+
+
+line 119, col 103 to line 119, col 112 of module QMigrate
+
+Unknown operator: `lastSearch'.
+
+
+
+

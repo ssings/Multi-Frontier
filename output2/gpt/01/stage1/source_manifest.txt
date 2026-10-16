@@ -1,0 +1,9 @@
+fetched_at=2026-08-09T18:12:13+08:00
+pass	Architecture Overview	https://cassandra.apache.org/doc/latest/cassandra/architecture/overview.html
+pass	Dynamo and Tunable Consistency	https://cassandra.apache.org/doc/latest/cassandra/architecture/dynamo.html
+pass	Storage Engine and Write Path	https://cassandra.apache.org/doc/latest/cassandra/architecture/storage-engine.html
+pass	Guarantees and Eventual Consistency	https://cassandra.apache.org/doc/latest/cassandra/architecture/guarantees.html
+pass	Authentication and Authorization	https://cassandra.apache.org/doc/latest/cassandra/managing/operating/security.html
+pass	Roles and Permissions	https://cassandra.apache.org/doc/latest/cassandra/developing/cql/security.html
+pass	Topology Changes	https://cassandra.apache.org/doc/latest/cassandra/managing/operating/topo_changes.html
+pass	Streaming	https://cassandra.apache.org/doc/latest/cassandra/architecture/streaming.html

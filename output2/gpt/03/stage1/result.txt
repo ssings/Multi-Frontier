@@ -1,0 +1,17 @@
+model_family=gpt
+provider=openai
+model=gpt-5.6-terra
+base_url=https://api.openai.com/v1
+repeat_index=03
+started_at=2026-08-09T18:44:22+08:00
+docs_result=pass
+spec_result=pass
+failed_checks=none
+fetched_sources=8
+failed_sources=0
+api_calls=1
+spec_repair_rounds=0
+prompt_tokens=33277
+completion_tokens=15938
+total_tokens=49215
+finished_at=2026-08-09T18:47:06+08:00

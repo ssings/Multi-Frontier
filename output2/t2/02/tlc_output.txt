@@ -1,0 +1,38 @@
+TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
+Running breadth-first search Model-Checking with fp 65 and seed -937353723776145361 with 1 worker on 8 cores with 1820MB heap and 64MB offheap memory (Windows 10 10.0 amd64, Oracle Corporation 1.8.0_131 x86_64, MSBDiskFPSet, DiskStateQueue).
+Parsing file D:\python\formalization\output2\t2\02\Cassandra\CIntegrated.tla
+Parsing file D:\python\formalization\output2\t2\02\Cassandra\CFrontierInterface.tla
+Parsing file D:\python\formalization\output2\t2\02\Cassandra\CCfgHelpers.tla
+Parsing file D:\python\formalization\output2\t2\02\Cassandra\CRead.tla
+Parsing file D:\python\formalization\output2\t2\02\Cassandra\CMigrate.tla
+Parsing file D:\python\formalization\output2\t2\02\Cassandra\CReplica.tla
+Parsing file D:\python\formalization\output2\t2\02\Cassandra\CWrite.tla
+Parsing file D:\python\formalization\output2\t2\02\Cassandra\CAuth.tla
+Parsing file D:\python\formalization\output2\t2\02\Cassandra\CCore.tla
+Parsing file C:\Users\27\AppData\Local\Temp\Naturals.tla
+Parsing file C:\Users\27\AppData\Local\Temp\FiniteSets.tla
+Parsing file C:\Users\27\AppData\Local\Temp\Sequences.tla
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module CCore
+Semantic processing of module CAuth
+Semantic processing of module CWrite
+Semantic processing of module CReplica
+Semantic processing of module CMigrate
+Semantic processing of module CRead
+Semantic processing of module CFrontierInterface
+Semantic processing of module CCfgHelpers
+Semantic processing of module CIntegrated
+Starting... (2026-08-04 21:40:30)
+Computing initial states...
+Computed 2 initial states...
+Finished computing initial states: 3 distinct states generated at 2026-08-04 21:40:30.
+Model checking completed. No error has been found.
+  Estimates of the probability that TLC did not check all reachable states
+  because two distinct states had the same fingerprint:
+  calculated (optimistic):  val = 5.9E-14
+3783 states generated, 315 distinct states found, 0 states left on queue.
+The depth of the complete state graph search is 4.
+The average outdegree of the complete state graph is 1 (minimum is 0, the maximum 12 and the 95th percentile is 6).
+Finished in 01s at (2026-08-04 21:40:31)
